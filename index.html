@@ -100,6 +100,7 @@ nav{
   background:rgba(10,10,10,0.6);
   backdrop-filter:var(--blur);
   border-bottom:1px solid rgba(255,122,0,0.2);
+  flex-wrap:wrap;
 }
 
 nav button{
@@ -157,6 +158,7 @@ nav button:hover{
 
 .hero p{
   color:var(--muted);
+  font-size:16px;
 }
 
 /* CARD */
@@ -181,6 +183,7 @@ nav button:hover{
   display:flex;
   align-items:center;
   gap:15px;
+  flex-wrap:wrap;
 }
 
 /* GALLERY */
@@ -191,7 +194,7 @@ nav button:hover{
 }
 
 .gallery img{
-  width:140px;
+  width:100%;
   height:140px;
   object-fit:cover;
   border-radius:14px;
@@ -230,10 +233,12 @@ nav button:hover{
   justify-content:center;
   align-items:center;
   z-index:999;
+  padding:20px;
 }
 
 #modal img{
   max-width:90%;
+  max-height:90vh;
   border-radius:16px;
   box-shadow:0 0 40px rgba(255,122,0,0.3);
 }
@@ -264,6 +269,7 @@ nav button:hover{
   cursor:pointer;
   background:linear-gradient(135deg,var(--primary),var(--primary2));
   color:#fff;
+  font-size:14px;
 }
 
 /* CONTENT */
@@ -285,6 +291,7 @@ nav button:hover{
   font-weight:600;
   cursor:pointer;
   transition:.25s;
+  font-size:13px;
 }
 
 .playBtn:hover{
@@ -300,6 +307,7 @@ nav button:hover{
   background:#111;
   color:#fff;
   cursor:pointer;
+  font-size:12px;
 }
 
 /* MINIMIZADO */
@@ -311,11 +319,109 @@ nav button:hover{
   width:180px;
 }
 
-/* RESPONSIVO */
-@media(max-width:800px){
-  .hero h1{font-size:34px}
-  nav{flex-wrap:wrap}
-  .gallery img{width:110px;height:110px}
+/* ===== RESPONSIVO - TABLET (768px - 1024px) ===== */
+@media(max-width:1024px){
+  .container{padding:20px}
+  
+  .hero h1{font-size:48px}
+  .hero p{font-size:15px}
+  
+  header{padding:20px}
+  header img{width:80px}
+  
+  nav{gap:8px;padding:10px}
+  nav button{padding:8px 14px;font-size:12px}
+  
+  .gallery{grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px}
+  .gallery img{height:120px}
+  
+  .card{padding:18px;margin-bottom:12px}
+}
+
+/* ===== RESPONSIVO - TABLET PEQUENO / LANDSCAPE (768px) ===== */
+@media(max-width:768px){
+  .container{padding:16px}
+  
+  .hero h1{font-size:42px;letter-spacing:1px}
+  .hero p{font-size:14px;margin-top:8px}
+  
+  header{padding:18px}
+  header img{width:75px}
+  
+  nav{gap:6px;padding:10px}
+  nav button{padding:7px 12px;font-size:11px}
+  
+  .gallery{grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px}
+  .gallery img{height:110px}
+  
+  .card{padding:16px;margin-bottom:12px}
+  
+  .team,.champ{gap:10px}
+  
+  #musicPlayer{width:240px;bottom:15px;right:15px}
+  #playerHeader{font-size:13px;padding:10px}
+  #playerContent{padding:10px;gap:8px}
+  .playBtn{padding:8px;font-size:12px}
+  #musicPlayer select{font-size:11px;padding:6px}
+}
+
+/* ===== RESPONSIVO - CELULAR (480px - 767px) ===== */
+@media(max-width:480px){
+  .container{padding:12px}
+  
+  .hero h1{font-size:32px;letter-spacing:0.5px}
+  .hero p{font-size:13px;margin-top:6px}
+  
+  header{padding:16px}
+  header img{width:65px}
+  
+  nav{gap:5px;padding:8px}
+  nav button{padding:6px 10px;font-size:10px}
+  
+  .gallery{grid-template-columns:repeat(auto-fill,minmax(95px,1fr));gap:6px}
+  .gallery img{height:95px}
+  
+  .card{padding:14px;margin-bottom:10px}
+  
+  .team,.champ{gap:10px;flex-direction:column;align-items:flex-start}
+  
+  .social{padding:12px;margin-bottom:8px;font-size:13px}
+  
+  #musicPlayer{width:200px;bottom:12px;right:12px}
+  #playerHeader{font-size:12px;padding:8px}
+  #playerContent{padding:8px;gap:6px}
+  .playBtn{padding:7px;font-size:11px}
+  #musicPlayer select{font-size:10px;padding:5px}
+  
+  #musicPlayer.minimized{width:160px}
+  
+  #modal{padding:12px}
+  #modal img{max-width:100%;max-height:80vh}
+}
+
+/* ===== RESPONSIVO - CELULAR MUITO PEQUENO (320px - 479px) ===== */
+@media(max-width:320px){
+  .container{padding:10px}
+  
+  .hero h1{font-size:26px}
+  .hero p{font-size:12px}
+  
+  header{padding:12px}
+  header img{width:55px}
+  
+  nav{gap:4px;padding:6px}
+  nav button{padding:5px 8px;font-size:9px}
+  
+  .gallery{grid-template-columns:repeat(2,1fr);gap:4px}
+  .gallery img{height:85px}
+  
+  .card{padding:12px;margin-bottom:8px}
+  
+  #musicPlayer{width:170px;bottom:10px;right:10px}
+  #playerHeader{font-size:11px;padding:6px}
+  #playerContent{padding:6px;gap:4px}
+  .playBtn{padding:6px;font-size:10px}
+  #musicPlayer select{font-size:9px;padding:4px}
 }
 
 </style>
@@ -724,34 +830,7 @@ nav button:hover{
         background: linear-gradient(180deg, orange, #ff7a00, #ffb347);
       "></div>
 
-      <!-- STATUS -->
-      <span style="
-        position:absolute;
-        top:14px;
-        right:14px;
-        background: rgba(255,165,0,0.12);
-        color: orange;
-        padding:6px 12px;
-        font-size:11px;
-        border-radius:999px;
-        font-weight:800;
-        letter-spacing:0.6px;
-        border:1px solid rgba(255,165,0,0.4);
-        display:flex;
-        align-items:center;
-        gap:6px;
-      ">
-        <span style="
-          width:6px;
-          height:6px;
-          background:orange;
-          border-radius:50%;
-          display:inline-block;
-        "></span>
-        EM ANDAMENTO
-      </span>
-
-      <div style="display:flex; align-items:center; gap:14px;">
+      <div style="display:flex; align-items:flex-start; gap:14px;">
 
         <img src="bsl.png" alt="BSL Logo" style="
           width:64px;
@@ -761,9 +840,35 @@ nav button:hover{
           padding:6px;
           object-fit:contain;
           box-shadow: 0 6px 14px rgba(0,0,0,0.25);
+          flex-shrink:0;
         ">
 
-        <div style="display:flex; flex-direction:column; gap:6px;">
+        <div style="display:flex; flex-direction:column; gap:6px; flex:1;">
+
+          <!-- STATUS -->
+          <span style="
+            background: rgba(255,165,0,0.12);
+            color: orange;
+            padding:6px 12px;
+            font-size:11px;
+            border-radius:999px;
+            font-weight:800;
+            letter-spacing:0.6px;
+            border:1px solid rgba(255,165,0,0.4);
+            display:flex;
+            align-items:center;
+            gap:6px;
+            width:fit-content;
+          ">
+            <span style="
+              width:6px;
+              height:6px;
+              background:orange;
+              border-radius:50%;
+              display:inline-block;
+            "></span>
+            EM ANDAMENTO
+          </span>
 
           <strong style="
             font-size:18px;
