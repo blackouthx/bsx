@@ -1500,6 +1500,79 @@ function openInsta() {
 function openZap() {
   window.open('https://chat.whatsapp.com/ItE2VtOWXLeDyo9k7w4knw', '_blank');
 }
+
+function ativarAntiInspecionar() {
+  // Bloqueia clique do botão direito
+  document.addEventListener('contextmenu', function (e) {
+    e.preventDefault();
+    alert('Ação não permitida!');
+  });
+
+  // Bloqueia seleção de texto
+  document.addEventListener('selectstart', function (e) {
+    e.preventDefault();
+  });
+
+  // Bloqueia drag and drop
+  document.addEventListener('dragstart', function (e) {
+    e.preventDefault();
+  });
+
+  // Bloqueia copiar, colar e recortar
+  ['copy', 'paste', 'cut'].forEach(function (evt) {
+    document.addEventListener(evt, function (e) {
+      e.preventDefault();
+    });
+  });
+
+  // Bloqueia clique do botão do meio e botão esquerdo duplo
+  document.addEventListener('mousedown', function (e) {
+    if (e.button === 1 || e.detail > 1) {
+      e.preventDefault();
+    }
+  });
+
+  // Bloqueia atalhos e DevTools
+  document.addEventListener('keydown', function (e) {
+    // F12
+    if (e.key === 'F12' || e.keyCode === 123) {
+      e.preventDefault();
+    }
+    // Ctrl+Shift+I,C,J,K
+    if (
+      (e.ctrlKey && e.shiftKey && ['I', 'C', 'J', 'K'].includes(e.key.toUpperCase())) ||
+      // Cmd+Opt+I (Mac)
+      (e.metaKey && e.altKey && e.key.toUpperCase() === 'I') ||
+      // Ctrl+U, Ctrl+S, Ctrl+P
+      (e.ctrlKey && ['U', 'S', 'P'].includes(e.key.toUpperCase()))
+    ) {
+      e.preventDefault();
+    }
+  });
+
+  // Detecta DevTools por alterações de dimensão da janela
+  function detectaDevTools() {
+    if (
+      window.outerWidth - window.innerWidth > 200 ||
+      window.outerHeight - window.innerHeight > 200
+    ) {
+      document.body.innerHTML = '<h2 style="text-align:center;margin-top:20%;">Acesso bloqueado</h2>';
+      // Opcional: Redireciona
+      // window.location.href = 'https://seusite.com/bloqueado';
+    }
+  }
+  window.addEventListener('resize', detectaDevTools);
+  setInterval(detectaDevTools, 1000);
+
+  // Detecta mudança de foco (alternar/janela)
+  window.addEventListener('blur', function () {
+    setTimeout(() => detectaDevTools(), 200);
+  });
+}
+
+// Execute ao carregar
+ativarAntiInspecionar();
+
 </script>
 
 </body>
