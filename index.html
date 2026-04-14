@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BSX Liga</title>
+<title>BSX</title>
 <link rel="icon" href="logo2.ico">
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
@@ -18,19 +18,22 @@
   --text:#ffffff;
   --muted:#b8b8b8;
   --blur:blur(20px);
+  --dark-card:#0f0f0f;
 }
 
-/* RESET */
 *{margin:0;padding:0;box-sizing:border-box}
+
+html{scroll-behavior:smooth}
 
 body{
   font-family:Inter,sans-serif;
-  background: radial-gradient(circle at top,#1a1a1a,#050505 60%);
+  background:fixed radial-gradient(circle at top,#1a1a1a,#050505 60%);
   color:var(--text);
   overflow-x:hidden;
+  position:relative;
 }
 
-/* FUNDO ANIMADO */
+/* ===== FUNDO ANIMADO ===== */
 body::before{
   content:"";
   position:fixed;
@@ -38,20 +41,30 @@ body::before{
   background:
     radial-gradient(circle at 20% 30%, rgba(255,122,0,0.15), transparent 40%),
     radial-gradient(circle at 80% 70%, rgba(255,60,0,0.12), transparent 40%);
-  animation:moveBg 10s infinite alternate ease-in-out;
+  animation:moveBgPremium 12s infinite alternate cubic-bezier(0.4, 0.0, 0.2, 1);
   z-index:-1;
 }
 
-@keyframes moveBg{
-  0%{transform:translate(0,0)}
-  100%{transform:translate(-40px,30px)}
+@keyframes moveBgPremium{
+  0%{transform:translate(0,0) scale(0.95)}
+  50%{transform:translate(-50px,40px) scale(1.05)}
+  100%{transform:translate(-100px,80px) scale(0.95)}
+}
+
+/* ===== CANVAS PARTÍCULAS ===== */
+#particleCanvas{
+  position:fixed;
+  top:0;
+  left:0;
+  z-index:0;
+  pointer-events:none;
 }
 
 /* ===== LOADING PREMIUM ===== */
 #loading{
   position:fixed;
   inset:0;
-  background: radial-gradient(circle at center, #1a1a1a, #050505);
+  background:radial-gradient(circle at center, #1a1a1a, #050505);
   display:flex;
   flex-direction:column;
   justify-content:center;
@@ -60,7 +73,6 @@ body::before{
   overflow:hidden;
 }
 
-/* Partículas de fundo do loading */
 #loading::before{
   content:"";
   position:absolute;
@@ -68,142 +80,112 @@ body::before{
   background:
     radial-gradient(circle at 20% 30%, rgba(255,122,0,0.2), transparent 35%),
     radial-gradient(circle at 80% 70%, rgba(255,60,0,0.15), transparent 40%);
-  animation:loadingGlow 4s ease-in-out infinite;
+  animation:loadingPulse 3s ease-in-out infinite;
 }
 
-@keyframes loadingGlow{
-  0%, 100%{opacity:0.6}
-  50%{opacity:1}
+@keyframes loadingPulse{
+  0%, 100%{opacity:0.6;transform:scale(1)}
+  50%{opacity:1;transform:scale(1.1)}
 }
 
-/* Loader container premium */
-.loader-container{
+.loader-premium{
+  width:100px;
+  height:100px;
   position:relative;
   z-index:2;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:30px;
+  filter:drop-shadow(0 0 40px rgba(255,122,0,0.4));
 }
 
-/* Spinner triplo */
-.loader{
-  width:90px;
-  height:90px;
-  position:relative;
-}
-
-.loader::before,
-.loader::after,
-.loader span{
-  content:"";
+.loader-ring{
   position:absolute;
+  inset:0;
   border-radius:50%;
-  animation:spinMulti 3s linear infinite;
+  border:4px solid transparent;
+  border-top:4px solid var(--primary);
+  border-right:4px solid var(--primary2);
+  animation:rotateLoader 2.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+  box-shadow:0 0 30px rgba(255,122,0,0.5);
 }
 
-.loader::before{
-  width:90px;
-  height:90px;
-  border:3px solid transparent;
-  border-top:3px solid var(--primary);
-  border-right:3px solid var(--primary2);
-  animation:spinMulti 3s linear infinite;
+.loader-ring:nth-child(2){
+  inset:20px;
+  border-top:3px solid var(--primary2);
+  border-right:3px solid transparent;
+  animation:rotateLoader 3.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite reverse;
 }
 
-.loader::after{
-  width:60px;
-  height:60px;
-  top:15px;
-  left:15px;
-  border:2px solid transparent;
-  border-bottom:2px solid rgba(255,122,0,0.6);
-  animation:spinMulti 2s linear infinite reverse;
+.loader-ring:nth-child(3){
+  inset:40px;
+  border-top:2px solid var(--primary);
+  border-left:2px solid var(--primary2);
+  animation:rotateLoader 2s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
 }
 
-.loader span{
-  width:30px;
-  height:30px;
-  top:30px;
-  left:30px;
-  border:2px solid rgba(255,60,0,0.4);
-  border-left:2px solid var(--primary);
-  animation:spinMulti 1.5s linear infinite;
-}
-
-@keyframes spinMulti{
+@keyframes rotateLoader{
   to{transform:rotate(360deg)}
 }
 
-/* Texto do loading melhorado */
-.loading-text{
+.loading-content{
   position:relative;
   z-index:2;
   text-align:center;
+  margin-top:40px;
 }
 
-.loading-text p{
-  margin:0;
-  color:#aaa;
+.loading-content p{
   font-size:16px;
+  color:#fff;
   letter-spacing:2px;
-  font-weight:500;
+  font-weight:600;
+  margin-bottom:8px;
+  animation:fadeInOut 2s ease-in-out infinite;
 }
 
-.loading-text .dots{
-  display:inline-block;
-  animation:dots 1.5s steps(4, end) infinite;
+@keyframes fadeInOut{
+  0%, 100%{opacity:0.8;text-shadow:0 0 10px rgba(255,122,0,0.4)}
+  50%{opacity:1;text-shadow:0 0 30px rgba(255,122,0,0.8)}
 }
 
-@keyframes dots{
-  0%, 20%{content:""}
-  40%{content:"."}
-  60%{content:".."}
-  80%, 100%{content:"..."}
-}
-
-.loading-subtitle{
-  margin-top:12px;
-  font-size:13px;
-  color:#666;
+.loading-sub{
+  font-size:12px;
+  color:#888;
   letter-spacing:1px;
 }
 
-/* Barra de progresso animada */
-.progress-bar{
-  position:relative;
-  z-index:2;
-  width:120px;
+.progress-line{
+  width:150px;
   height:3px;
   border-radius:999px;
-  background:rgba(255,255,255,0.1);
+  background:rgba(255,122,0,0.2);
+  margin-top:20px;
   overflow:hidden;
-  margin-top:15px;
+  position:relative;
 }
 
-.progress-bar::after{
+.progress-line::after{
   content:"";
   position:absolute;
   inset:0;
-  background:linear-gradient(90deg, var(--primary), var(--primary2));
-  animation:progress 2s ease-in-out infinite;
+  background:linear-gradient(90deg, var(--primary), var(--primary2), var(--primary));
   border-radius:999px;
+  animation:progressMove 2s ease-in-out infinite;
+  box-shadow:0 0 20px rgba(255,122,0,0.6);
 }
 
-@keyframes progress{
+@keyframes progressMove{
   0%{width:0}
   50%{width:100%}
   100%{width:100%}
 }
 
-/* HEADER */
+/* ===== HEADER CHAMPIONSHIP ===== */
 header{
-  padding:28px;
+  padding:32px 28px;
   text-align:center;
   background:linear-gradient(135deg,var(--primary),var(--primary2));
   box-shadow:
-    0 10px 50px rgba(255,122,0,0.3),
-    inset 0 1px 0 rgba(255,255,255,0.1);
+    0 15px 50px rgba(255,122,0,0.3),
+    inset 0 1px 0 rgba(255,255,255,0.15);
   position:relative;
   overflow:hidden;
 }
@@ -212,51 +194,62 @@ header::before{
   content:"";
   position:absolute;
   inset:0;
-  background:linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+  animation:shimmerHeader 4s ease-in-out infinite;
   pointer-events:none;
 }
 
+@keyframes shimmerHeader{
+  0%{opacity:0}
+  50%{opacity:1}
+  100%{opacity:0}
+}
+
 header img{
-  width:95px;
-  border-radius:18px;
-  transition:.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  filter:drop-shadow(0 0 10px rgba(0,0,0,0.4));
+  width:100px;
+  border-radius:20px;
+  transition:.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  filter:drop-shadow(0 0 15px rgba(0,0,0,0.4));
   position:relative;
   z-index:1;
+  border:3px solid rgba(255,255,255,0.2);
 }
 
 header img:hover{
-  transform:scale(1.12) rotate(2deg) translateY(-2px);
-  filter:drop-shadow(0 8px 25px rgba(255,122,0,0.5));
+  transform:scale(1.12) rotate(3deg) translateY(-5px);
+  filter:drop-shadow(0 12px 40px rgba(255,122,0,0.5));
+  border-color:rgba(255,255,255,0.4);
 }
 
-/* NAV */
+/* ===== NAV PROFESSIONAL ===== */
 nav{
   display:flex;
   justify-content:center;
   gap:10px;
-  padding:12px;
+  padding:14px 28px;
   position:sticky;
   top:0;
-  z-index:10;
-  background:rgba(10,10,10,0.8);
+  z-index:100;
+  background:linear-gradient(180deg, rgba(10,10,10,0.95), rgba(10,10,10,0.85));
   backdrop-filter:var(--blur);
-  border-bottom:1px solid rgba(255,122,0,0.2);
+  border-bottom:1.5px solid rgba(255,122,0,0.25);
   flex-wrap:wrap;
-  box-shadow:0 4px 20px rgba(0,0,0,0.3);
+  box-shadow:0 8px 40px rgba(0,0,0,0.5);
 }
 
 nav button{
-  background:var(--glass2);
-  border:1px solid rgba(255,255,255,0.08);
-  color:#ccc;
-  padding:10px 16px;
+  background:rgba(255,122,0,0.05);
+  border:1.5px solid rgba(255,122,0,0.2);
+  color:#d0d0d0;
+  padding:11px 20px;
   border-radius:999px;
   font-size:13px;
   cursor:pointer;
-  transition:.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition:.35s cubic-bezier(0.34, 1.56, 0.64, 1);
   position:relative;
   overflow:hidden;
+  font-weight:600;
+  letter-spacing:0.5px;
 }
 
 nav button::before{
@@ -265,164 +258,202 @@ nav button::before{
   inset:0;
   background:linear-gradient(135deg, var(--primary), var(--primary2));
   opacity:0;
-  transition:.3s;
-  z-index:-1;
+  transition:.4s;
   border-radius:999px;
+  z-index:-1;
+}
+
+nav button::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  opacity:0;
+  border-radius:999px;
+  animation:navShimmer 2s infinite;
 }
 
 nav button:hover{
-  background:rgba(255,122,0,0.2);
   color:#fff;
-  transform:translateY(-2px);
-  box-shadow:0 8px 20px rgba(255,122,0,0.4);
-  border:1px solid rgba(255,122,0,0.4);
+  transform:translateY(-3px);
+  box-shadow:0 12px 35px rgba(255,122,0,0.35);
+  border-color:rgba(255,122,0,0.5);
+  background:rgba(255,122,0,0.12);
 }
 
-nav button:active{
-  transform:translateY(0);
+nav button:hover::after{
+  opacity:1;
 }
 
-/* CONTAINER */
+@keyframes navShimmer{
+  0%{transform:translateX(-100%)}
+  100%{transform:translateX(100%)}
+}
+
+/* ===== CONTAINER ===== */
 .container{
-  max-width:1100px;
+  max-width:1200px;
   margin:auto;
-  padding:25px;
+  padding:40px 28px;
 }
 
-/* SEÇÕES */
+/* ===== SECTIONS ===== */
 .section{
   display:none;
   opacity:0;
-  transform:translateY(20px);
-  transition:.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform:translateY(25px) rotateX(8deg);
+  transition:.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+  perspective:1000px;
 }
 
 .active{
   display:block;
   opacity:1;
-  transform:translateY(0);
+  transform:translateY(0) rotateX(0);
 }
 
-/* HERO */
+/* ===== HERO CHAMPIONSHIP ===== */
 .hero{
   text-align:center;
-  margin:30px 0;
+  margin:40px 0;
 }
 
 .hero h1{
-  font-size:60px;
+  font-size:68px;
   background:linear-gradient(90deg,var(--primary),#fff);
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
-  letter-spacing:2px;
+  letter-spacing:3px;
   font-weight:900;
+  animation:heroShine 3s ease-in-out infinite;
+  margin-bottom:8px;
+}
+
+@keyframes heroShine{
+  0%, 100%{
+    filter:drop-shadow(0 0 10px rgba(255,122,0,0.3));
+    opacity:1;
+  }
+  50%{
+    filter:drop-shadow(0 0 30px rgba(255,122,0,0.6));
+    opacity:0.95;
+  }
 }
 
 .hero p{
   color:var(--muted);
   font-size:16px;
+  margin-top:12px;
+  letter-spacing:0.8px;
+  font-weight:500;
 }
 
-/* CARD */
+/* ===== CARD PREMIUM ===== */
 .card{
-  background:var(--glass);
+  background:linear-gradient(135deg, rgba(15,15,15,0.8), rgba(8,8,8,0.95));
   backdrop-filter:var(--blur);
-  padding:22px;
-  border-radius:20px;
-  margin-bottom:15px;
-  border:1px solid rgba(255,255,255,0.06);
-  transition:.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-  box-shadow:0 10px 30px rgba(0,0,0,0.3);
+  padding:28px;
+  border-radius:24px;
+  margin-bottom:20px;
+  border:1.5px solid rgba(255,122,0,0.12);
+  transition:.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow:
+    0 15px 45px rgba(0,0,0,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.06);
   position:relative;
   overflow:hidden;
+  will-change:transform;
 }
 
 .card::before{
   content:"";
   position:absolute;
   inset:0;
-  background:linear-gradient(135deg, transparent, rgba(255,255,255,0.03), transparent);
+  background:linear-gradient(135deg, transparent, rgba(255,255,255,0.04), transparent);
   opacity:0;
-  transition:.3s;
+  transition:.4s;
+  border-radius:24px;
+}
+
+.card::after{
+  content:"";
+  position:absolute;
+  inset:-1px;
+  background:linear-gradient(45deg,
+    rgba(255,122,0,0.15) 0%,
+    transparent 25%,
+    transparent 75%,
+    rgba(255,60,0,0.15) 100%);
+  border-radius:24px;
+  opacity:0;
+  transition:.4s;
   pointer-events:none;
+  box-shadow:inset 0 0 30px rgba(255,122,0,0.08);
 }
 
 .card:hover{
-  transform:translateY(-8px);
-  border:1px solid rgba(255,122,0,0.4);
-  box-shadow:0 20px 50px rgba(255,122,0,0.15);
+  transform:translateY(-10px) rotateX(6deg);
+  border:1.5px solid rgba(255,122,0,0.35);
+  box-shadow:
+    0 25px 70px rgba(255,122,0,0.2),
+    inset 0 1px 0 rgba(255,255,255,0.1);
 }
 
-/* TEAM / CHAMP */
-.team,.champ{
-  display:flex;
-  align-items:center;
-  gap:15px;
-  flex-wrap:wrap;
+.card:hover::before{
+  opacity:1;
 }
 
-/* GALLERY */
+.card:hover::after{
+  opacity:1;
+}
+
+/* ===== GALLERY SHOWCASE ===== */
 .gallery{
   display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
-  gap:12px;
+  grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+  gap:16px;
+  margin-bottom:0;
 }
 
 .gallery img{
   width:100%;
-  height:140px;
+  height:160px;
   object-fit:cover;
-  border-radius:14px;
+  border-radius:16px;
   cursor:pointer;
-  transition:.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-  box-shadow:0 10px 25px rgba(0,0,0,0.3);
+  transition:.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow:
+    0 12px 35px rgba(0,0,0,0.35),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+  border:1.5px solid rgba(255,122,0,0.12);
   position:relative;
+  filter:brightness(1) contrast(1.05);
 }
 
 .gallery img::before{
   content:"";
   position:absolute;
   inset:0;
-  background:linear-gradient(135deg, rgba(255,122,0,0.3), transparent);
+  background:linear-gradient(135deg, rgba(255,122,0,0.25), transparent);
   opacity:0;
-  transition:.3s;
-  border-radius:14px;
+  transition:.4s;
+  border-radius:15px;
 }
 
 .gallery img:hover{
-  transform:scale(1.1) rotateY(5deg);
-  box-shadow:0 0 40px rgba(255,122,0,0.5);
+  transform:scale(1.1) rotateY(6deg) rotateX(-3deg);
+  box-shadow:
+    0 20px 60px rgba(255,122,0,0.3),
+    inset 0 0 30px rgba(255,122,0,0.12);
+  filter:brightness(1.1) contrast(1.15);
+  border-color:rgba(255,122,0,0.3);
 }
 
-/* SOCIAL */
-.social{
-  padding:14px;
-  border-radius:12px;
-  background:var(--glass2);
-  margin-bottom:10px;
-  cursor:pointer;
-  transition:.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  position:relative;
-  overflow:hidden;
+.gallery img:hover::before{
+  opacity:1;
 }
 
-.social::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:linear-gradient(90deg, transparent, rgba(255,122,0,0.3), transparent);
-  transform:translateX(-100%);
-  transition:.5s;
-}
-
-.social:hover{
-  background:var(--primary);
-  color:#000;
-  transform:scale(1.03) translateX(4px);
-  box-shadow:0 8px 25px rgba(255,122,0,0.4);
-}
-
-/* MODAL */
+/* ===== MODAL ===== */
 #modal{
   display:none;
   position:fixed;
@@ -430,90 +461,130 @@ nav button:active{
   background:rgba(0,0,0,0.95);
   justify-content:center;
   align-items:center;
-  z-index:999;
+  z-index:998;
   padding:20px;
   backdrop-filter:blur(10px);
-  animation:fadeIn .3s ease-out;
+  animation:fadeInModal .4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-@keyframes fadeIn{
-  from{opacity:0}
-  to{opacity:1}
+@keyframes fadeInModal{
+  from{opacity:0;background:rgba(0,0,0,0.5)}
+  to{opacity:1;background:rgba(0,0,0,0.95)}
 }
 
 #modal img{
   max-width:90%;
   max-height:90vh;
-  border-radius:16px;
-  box-shadow:0 0 60px rgba(255,122,0,0.4);
-  animation:zoomIn .3s ease-out;
+  border-radius:20px;
+  border:2px solid rgba(255,122,0,0.3);
+  box-shadow:
+    0 0 80px rgba(255,122,0,0.4),
+    0 20px 80px rgba(0,0,0,0.8);
+  animation:zoomInModal .5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-@keyframes zoomIn{
+@keyframes zoomInModal{
   from{
-    transform:scale(0.8);
+    transform:scale(0.75) rotateZ(-5deg);
     opacity:0;
+    filter:blur(10px);
   }
   to{
-    transform:scale(1);
+    transform:scale(1) rotateZ(0);
     opacity:1;
+    filter:blur(0);
   }
 }
 
-/* ===== MUSIC PLAYER NOVO ===== */
-
+/* ===== MUSIC PLAYER ===== */
 #musicPlayer{
   position:fixed;
-  bottom:20px;
-  right:20px;
-  width:260px;
-  border-radius:18px;
-  background:rgba(10,10,10,0.85);
-  backdrop-filter:blur(20px);
-  border:1px solid rgba(255,122,0,0.4);
-  box-shadow:0 15px 50px rgba(0,0,0,0.6);
+  bottom:22px;
+  right:22px;
+  width:280px;
+  border-radius:20px;
+  background:linear-gradient(135deg, rgba(15,15,15,0.9), rgba(8,8,8,0.95));
+  backdrop-filter:blur(25px);
+  border:1.5px solid rgba(255,122,0,0.25);
+  box-shadow:
+    0 15px 55px rgba(0,0,0,0.6),
+    inset 0 1px 0 rgba(255,122,0,0.15);
   overflow:hidden;
-  transition:.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition:.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  will-change:transform;
 }
 
-/* HEADER */
+#musicPlayer::before{
+  content:"";
+  position:absolute;
+  inset:-1px;
+  background:linear-gradient(135deg, rgba(255,122,0,0.3), rgba(255,60,0,0.2));
+  opacity:0;
+  transition:.5s;
+  border-radius:20px;
+  z-index:-1;
+  pointer-events:none;
+}
+
+#musicPlayer:hover::before{
+  opacity:0.3;
+}
+
 #playerHeader{
-  padding:12px;
-  font-weight:600;
+  padding:13px;
+  font-weight:700;
   display:flex;
   justify-content:space-between;
   align-items:center;
   cursor:pointer;
   background:linear-gradient(135deg,var(--primary),var(--primary2));
   color:#fff;
-  font-size:14px;
+  font-size:13px;
   user-select:none;
-  box-shadow:0 4px 15px rgba(255,122,0,0.3);
+  box-shadow:0 6px 20px rgba(255,122,0,0.25);
+  position:relative;
+  letter-spacing:0.8px;
 }
 
-/* CONTENT */
+#playerHeader::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  animation:playerShimmer 3s ease-in-out infinite;
+  pointer-events:none;
+}
+
+@keyframes playerShimmer{
+  0%{transform:translateX(-100%)}
+  50%{transform:translateX(100%)}
+  100%{transform:translateX(100%)}
+}
+
 #playerContent{
-  padding:12px;
+  padding:14px;
   display:flex;
   flex-direction:column;
-  gap:10px;
-  transition:.3s;
+  gap:11px;
+  transition:.4s;
 }
 
-/* BOTÃO */
 .playBtn{
-  padding:10px;
-  border:none;
+  padding:12px;
+  border:1px solid rgba(255,122,0,0.3);
   border-radius:12px;
   background:linear-gradient(135deg,var(--primary),var(--primary2));
   color:#fff;
-  font-weight:600;
+  font-weight:700;
   cursor:pointer;
-  transition:.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  font-size:13px;
-  box-shadow:0 4px 15px rgba(255,122,0,0.3);
+  transition:.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  font-size:12px;
+  box-shadow:
+    0 8px 25px rgba(255,122,0,0.3),
+    inset 0 1px 0 rgba(255,255,255,0.15);
   position:relative;
   overflow:hidden;
+  letter-spacing:0.5px;
 }
 
 .playBtn::before{
@@ -523,146 +594,120 @@ nav button:active{
   background:linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
   transform:translateX(-100%);
   transition:.6s;
+  border-radius:10px;
 }
 
 .playBtn:hover{
   transform:scale(1.06) translateY(-2px);
-  box-shadow:0 8px 25px rgba(255,122,0,0.6);
+  box-shadow:
+    0 12px 35px rgba(255,122,0,0.5),
+    inset 0 0 20px rgba(255,255,255,0.08);
 }
 
 .playBtn:hover::before{
   transform:translateX(100%);
 }
 
-/* SELECT */
 #musicPlayer select{
   padding:8px;
   border-radius:10px;
-  border:1px solid rgba(255,122,0,0.3);
+  border:1px solid rgba(255,122,0,0.25);
   background:rgba(0,0,0,0.4);
   color:#fff;
   cursor:pointer;
-  font-size:12px;
+  font-size:11px;
+  font-weight:600;
   transition:.3s;
 }
 
 #musicPlayer select:hover{
-  border-color:rgba(255,122,0,0.6);
+  border-color:rgba(255,122,0,0.4);
   background:rgba(0,0,0,0.6);
+  box-shadow:0 0 15px rgba(255,122,0,0.25);
 }
 
-/* MINIMIZADO */
 #musicPlayer.minimized #playerContent{
   display:none;
 }
 
 #musicPlayer.minimized{
-  width:180px;
+  width:200px;
 }
 
-/* ===== RESPONSIVO - TABLET (768px - 1024px) ===== */
+/* ===== RESPONSIVO ===== */
+@media(max-width:1200px){
+  .container{padding:32px 24px}
+  .hero h1{font-size:56px}
+  .gallery{grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:14px}
+  .gallery img{height:145px}
+}
+
 @media(max-width:1024px){
-  .container{padding:20px}
-  
-  .hero h1{font-size:48px}
-  .hero p{font-size:15px}
-  
-  header{padding:20px}
-  header img{width:80px}
-  
-  nav{gap:8px;padding:10px}
-  nav button{padding:8px 14px;font-size:12px}
-  
-  .gallery{grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px}
-  .gallery img{height:120px}
-  
-  .card{padding:18px;margin-bottom:12px}
+  .container{padding:24px 20px}
+  .hero h1{font-size:48px;letter-spacing:2px}
+  header{padding:26px}
+  header img{width:90px}
+  nav{gap:8px;padding:12px 20px}
+  nav button{padding:10px 16px;font-size:12px}
+  .gallery{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px}
+  .gallery img{height:130px}
+  .card{padding:24px;margin-bottom:18px}
 }
 
-/* ===== RESPONSIVO - TABLET PEQUENO / LANDSCAPE (768px) ===== */
 @media(max-width:768px){
-  .container{padding:16px}
-  
-  .hero h1{font-size:42px;letter-spacing:1px}
-  .hero p{font-size:14px;margin-top:8px}
-  
+  .container{padding:20px 16px}
+  .hero h1{font-size:42px;letter-spacing:1.5px}
+  .hero p{font-size:15px}
+  header{padding:22px}
+  header img{width:80px}
+  nav{gap:6px;padding:11px 16px;margin-bottom:0}
+  nav button{padding:9px 14px;font-size:11px;padding:8px 12px}
+  .gallery{grid-template-columns:repeat(auto-fill,minmax(115px,1fr));gap:11px}
+  .gallery img{height:115px}
+  .card{padding:20px;margin-bottom:14px;border-radius:20px}
+  #musicPlayer{width:250px;bottom:16px;right:16px;border-radius:18px}
+  #playerHeader{padding:11px;font-size:12px}
+  #playerContent{padding:12px;gap:9px}
+  .playBtn{padding:10px;font-size:11px}
+  #musicPlayer select{font-size:10px;padding:7px}
+}
+
+@media(max-width:640px){
   header{padding:18px}
-  header img{width:75px}
-  
-  nav{gap:6px;padding:10px}
-  nav button{padding:7px 12px;font-size:11px}
-  
-  .gallery{grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px}
-  .gallery img{height:110px}
-  
-  .card{padding:16px;margin-bottom:12px}
-  
-  .team,.champ{gap:10px}
-  
-  #musicPlayer{width:240px;bottom:15px;right:15px}
-  #playerHeader{font-size:13px;padding:10px}
-  #playerContent{padding:10px;gap:8px}
-  .playBtn{padding:8px;font-size:12px}
-  #musicPlayer select{font-size:11px;padding:6px}
+  header img{width:72px}
+  .hero h1{font-size:36px;letter-spacing:1px}
+  .hero p{font-size:13px}
 }
 
-/* ===== RESPONSIVO - CELULAR (480px - 767px) ===== */
 @media(max-width:480px){
-  .container{padding:12px}
-  
-  .hero h1{font-size:32px;letter-spacing:0.5px}
-  .hero p{font-size:13px;margin-top:6px}
-  
+  .container{padding:16px 12px}
+  .hero h1{font-size:32px;letter-spacing:0.8px}
+  .hero p{font-size:12px;margin-top:6px}
   header{padding:16px}
-  header img{width:65px}
-  
-  nav{gap:5px;padding:8px}
-  nav button{padding:6px 10px;font-size:10px}
-  
-  .gallery{grid-template-columns:repeat(auto-fill,minmax(95px,1fr));gap:6px}
-  .gallery img{height:95px}
-  
-  .card{padding:14px;margin-bottom:10px}
-  
-  .team,.champ{gap:10px;flex-direction:column;align-items:flex-start}
-  
-  .social{padding:12px;margin-bottom:8px;font-size:13px}
-  
-  #musicPlayer{width:200px;bottom:12px;right:12px}
-  #playerHeader{font-size:12px;padding:8px}
-  #playerContent{padding:8px;gap:6px}
-  .playBtn{padding:7px;font-size:11px}
-  #musicPlayer select{font-size:10px;padding:5px}
-  
-  #musicPlayer.minimized{width:160px}
-  
-  #modal{padding:12px}
-  #modal img{max-width:100%;max-height:80vh}
+  header img{width:65px;border-radius:14px}
+  nav{gap:5px;padding:10px 12px}
+  nav button{padding:7px 11px;font-size:10px;border-radius:20px}
+  .gallery{grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:9px}
+  .gallery img{height:100px;border-radius:12px}
+  .card{padding:16px;margin-bottom:12px;border-radius:18px}
+  #musicPlayer{width:220px;bottom:12px;right:12px;border-radius:16px}
+  #playerHeader{font-size:11px;padding:10px}
+  #playerContent{padding:11px;gap:8px}
+  .playBtn{padding:9px;font-size:10px}
 }
 
-/* ===== RESPONSIVO - CELULAR MUITO PEQUENO (320px - 479px) ===== */
-@media(max-width:320px){
-  .container{padding:10px}
-  
-  .hero h1{font-size:26px}
-  .hero p{font-size:12px}
-  
-  header{padding:12px}
-  header img{width:55px}
-  
-  nav{gap:4px;padding:6px}
-  nav button{padding:5px 8px;font-size:9px}
-  
-  .gallery{grid-template-columns:repeat(2,1fr);gap:4px}
-  .gallery img{height:85px}
-  
-  .card{padding:12px;margin-bottom:8px}
-  
-  #musicPlayer{width:170px;bottom:10px;right:10px}
-  #playerHeader{font-size:11px;padding:6px}
-  #playerContent{padding:6px;gap:4px}
-  .playBtn{padding:6px;font-size:10px}
-  #musicPlayer select{font-size:9px;padding:4px}
+@media(max-width:380px){
+  .container{padding:12px}
+  .hero h1{font-size:28px}
+  header{padding:14px}
+  header img{width:58px}
+  nav{gap:4px;padding:8px}
+  nav button{padding:6px 10px;font-size:9px}
+  .gallery{grid-template-columns:repeat(2,1fr);gap:8px}
+  .gallery img{height:90px}
+  .card{padding:14px;margin-bottom:10px}
+  #musicPlayer{width:190px;bottom:10px;right:10px}
+  #playerHeader{font-size:10px;padding:8px}
 }
 
 </style>
@@ -670,23 +715,29 @@ nav button:active{
 
 <body>
 
+<!-- CANVAS PARTÍCULAS -->
+<canvas id="particleCanvas"></canvas>
+
+<!-- LOADING -->
 <div id="loading">
-  <div class="loader-container">
-    <div class="loader">
-      <span></span>
-    </div>
-    <div class="loading-text">
-      <p>Carregando BSX<span class="dots"></span></p>
-      <div class="loading-subtitle">Liga de Rachas em Xanxerê</div>
-    </div>
-    <div class="progress-bar"></div>
+  <div class="loader-premium">
+    <div class="loader-ring"></div>
+    <div class="loader-ring"></div>
+    <div class="loader-ring"></div>
+  </div>
+  <div class="loading-content">
+    <p>BSX</p>
+    <div class="loading-sub">Liga de Rachas em Xanxerê</div>
+    <div class="progress-line"></div>
   </div>
 </div>
 
+<!-- HEADER -->
 <header>
-  <img src="logo.png">
+  <img src="logo.png" alt="Liga BSX">
 </header>
 
+<!-- NAV -->
 <nav>
   <button onclick="showSection('home')">Início</button>
   <button onclick="showSection('times')">Times</button>
@@ -698,710 +749,616 @@ nav button:active{
 
 <div class="container">
 
+<!-- HOME -->
 <div id="home" class="section active">
 
-  <!-- HERO PRINCIPAL -->
   <div class="hero" style="
-    padding:34px 22px;
-    border-radius:24px;
-    background: radial-gradient(circle at top, #1b1b1b, #0a0a0a 70%);
-    box-shadow: 0 30px 70px rgba(0,0,0,0.75);
+    padding:40px 32px;
+    border-radius:28px;
+    background:linear-gradient(135deg, rgba(27,27,27,0.8), rgba(10,10,10,0.95));
+    box-shadow:
+      0 25px 60px rgba(0,0,0,0.5),
+      inset 0 1px 0 rgba(255,255,255,0.06);
     position:relative;
     overflow:hidden;
-    text-align:center;
+    border:1.5px solid rgba(255,122,0,0.15);
   ">
 
-    <!-- energia de fundo -->
     <div style="
       position:absolute;
-      top:-120px;
+      top:-140px;
       left:50%;
       transform:translateX(-50%);
-      width:320px;
-      height:320px;
-      background: radial-gradient(circle, rgba(255,140,0,0.28), transparent 70%);
-      filter: blur(16px);
-      animation:heroPulse 4s ease-in-out infinite;
+      width:350px;
+      height:350px;
+      background:radial-gradient(circle, rgba(255,140,0,0.3), transparent 65%);
+      filter:blur(28px);
+      animation:heroGlowPremium 5s ease-in-out infinite;
     "></div>
 
-    <!-- linhas decorativas -->
     <div style="
       position:absolute;
-      top:0;
-      left:0;
-      width:100%;
-      height:100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);
-      opacity:0.4;
+      inset:0;
+      background:linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent);
+      opacity:0.5;
       pointer-events:none;
+      border-radius:28px;
     "></div>
 
-    <!-- badge oficial -->
     <div style="
       display:inline-flex;
       align-items:center;
-      gap:8px;
-      padding:7px 16px;
+      gap:9px;
+      padding:9px 18px;
       border-radius:999px;
-      background: rgba(255,140,0,0.12);
-      border:1px solid rgba(255,140,0,0.35);
-      color:orange;
+      background:rgba(255,140,0,0.12);
+      border:1.5px solid rgba(255,140,0,0.35);
+      color:var(--primary);
       font-size:11px;
       font-weight:900;
-      letter-spacing:1px;
-      margin-bottom:16px;
-      animation:badgePulse 2s ease-in-out infinite;
+      letter-spacing:1.2px;
+      margin-bottom:20px;
+      animation:badgePremium 2.5s ease-in-out infinite;
+      position:relative;
+      z-index:1;
+      text-transform:uppercase;
     ">
-      🏀 Seja bem vindo(a)
+      <span style="
+        width:8px;
+        height:8px;
+        border-radius:50%;
+        background:var(--primary);
+        box-shadow:0 0 12px var(--primary);
+        animation:pulseLight 2s ease-in-out infinite;
+      "></span>
+      Bem vindo à Liga
     </div>
 
-    <!-- título forte -->
     <h1 style="
-      margin:0;
-      font-size:38px;
-      font-weight:900;
+      margin:0 0 12px 0;
+      font-size:64px;
+      font-weight:950;
       color:#fff;
-      letter-spacing:1.5px;
-      text-shadow:0 12px 40px rgba(0,0,0,0.8);
+      letter-spacing:2px;
+      position:relative;
+      z-index:1;
+      text-shadow:0 8px 30px rgba(0,0,0,0.5);
     ">
-      BSX LIGA
+      LIGA BSX
     </h1>
 
-    <!-- subtítulo -->
     <p style="
-      margin-top:10px;
-      color:#c2c2c2;
-      font-size:15px;
-      letter-spacing:0.4px;
+      margin:0;
+      color:#c0c0c0;
+      font-size:16px;
+      letter-spacing:0.8px;
+      position:relative;
+      z-index:1;
+      font-weight:500;
     ">
       Liga de Rachas em Xanxerê 🏀
     </p>
 
-    <!-- destaque info -->
     <div style="
-      margin-top:18px;
+      margin-top:24px;
       display:flex;
       justify-content:center;
-      gap:10px;
+      gap:12px;
       flex-wrap:wrap;
+      position:relative;
+      z-index:1;
     ">
-
       <div style="
-        padding:7px 14px;
+        padding:8px 16px;
         border-radius:14px;
-        background: rgba(255,255,255,0.04);
-        border:1px solid rgba(255,255,255,0.06);
+        background:rgba(255,255,255,0.05);
+        border:1px solid rgba(255,122,0,0.2);
         font-size:12px;
         color:#d0d0d0;
+        font-weight:600;
         transition:.3s;
+        letter-spacing:0.3px;
       ">
         🏆 Ranking
       </div>
-
       <div style="
-        padding:7px 14px;
+        padding:8px 16px;
         border-radius:14px;
-        background: rgba(255,255,255,0.04);
-        border:1px solid rgba(255,255,255,0.06);
+        background:rgba(255,255,255,0.05);
+        border:1px solid rgba(255,122,0,0.2);
         font-size:12px;
         color:#d0d0d0;
+        font-weight:600;
         transition:.3s;
+        letter-spacing:0.3px;
       ">
         🏀 Rachas
       </div>
-
       <div style="
-        padding:7px 14px;
+        padding:8px 16px;
         border-radius:14px;
-        background: rgba(255,140,0,0.10);
-        border:1px solid rgba(255,140,0,0.25);
+        background:rgba(255,140,0,0.12);
+        border:1.2px solid rgba(255,140,0,0.35);
         font-size:12px;
-        color:orange;
+        color:var(--primary);
         font-weight:800;
         transition:.3s;
+        letter-spacing:0.3px;
       ">
-        🔥 comunidade ativa
+        🔥 Comunidade Ativa
       </div>
-
     </div>
 
-    <!-- separador visual -->
     <div style="
-      margin-top:22px;
-      width:60px;
-      height:2px;
-      background: linear-gradient(90deg, transparent, orange, transparent);
+      margin-top:24px;
+      width:70px;
+      height:2.5px;
+      background:linear-gradient(90deg, transparent, var(--primary), transparent);
       margin-left:auto;
       margin-right:auto;
-      opacity:0.7;
+      opacity:0.8;
+      position:relative;
+      z-index:1;
+      border-radius:999px;
     "></div>
 
     <style>
-      @keyframes heroPulse{
-        0%, 100%{opacity:0.8}
-        50%{opacity:1}
+      @keyframes heroGlowPremium{
+        0%, 100%{opacity:0.7;transform:scale(1)}
+        50%{opacity:1;transform:scale(1.15)}
       }
-      @keyframes badgePulse{
+      @keyframes badgePremium{
         0%, 100%{box-shadow:0 0 0 0 rgba(255,140,0,0.4)}
-        50%{box-shadow:0 0 0 8px rgba(255,140,0,0)}
+        50%{box-shadow:0 0 0 12px rgba(255,140,0,0)}
+      }
+      @keyframes pulseLight{
+        0%, 100%{opacity:1;transform:scale(1)}
+        50%{opacity:0.5;transform:scale(1.3)}
       }
     </style>
 
   </div>
 
-  <!-- SOBRE -->
   <div class="card" style="
-    margin-top:18px;
-    padding:22px;
-    border-radius:20px;
-    background: linear-gradient(145deg, #181818, #0c0c0c);
-    box-shadow: 0 22px 50px rgba(0,0,0,0.6);
-    position:relative;
-    overflow:hidden;
+    margin-top:20px;
+    background:linear-gradient(135deg, rgba(27,27,27,0.7), rgba(12,12,12,0.9));
+    border-left:7px solid var(--primary);
   ">
-
-    <!-- lateral glow -->
     <div style="
-      position:absolute;
-      left:0;
-      top:0;
-      bottom:0;
-      width:6px;
-      background: linear-gradient(180deg, #ff8c00, #ffb347, #ff8c00);
-      box-shadow: 0 0 20px rgba(255,140,0,0.4);
-    "></div>
-
-    <div style="
-      font-size:13px;
-      color:#cfcfcf;
-      line-height:1.8;
-      letter-spacing:0.3px;
+      font-size:14px;
+      color:#d8d8d8;
+      line-height:2;
+      letter-spacing:0.4px;
+      font-weight:500;
     ">
-      Criada em 2025, a BSX LIGA nasceu com o objetivo de fortalecer e divulgar a cultura do basquete em Xanxerê e região.
+      Criada em 2025, a BSX nasceu com o objetivo de fortalecer e divulgar a cultura do basquete em Xanxerê e região.
       A iniciativa organiza rachas em quadras públicas e também em espaços reservados, promovendo competitividade,
       união entre atletas e a evolução do jogo de rua.
     </div>
-
   </div>
 
 </div>
 
+<!-- TIMES -->
 <div id="times" class="section">
   <div class="card">
 
     <div class="team" style="
       display:flex;
       align-items:center;
-      gap:18px;
-      padding:22px;
-      border-radius:22px;
-      background: linear-gradient(145deg, #1a1a1a, #0a0a0a);
-      box-shadow: 0 22px 50px rgba(0,0,0,0.65);
+      gap:22px;
+      padding:28px;
+      border-radius:24px;
+      background:linear-gradient(135deg, rgba(27,27,27,0.8), rgba(10,10,10,0.95));
+      box-shadow:
+        0 20px 50px rgba(0,0,0,0.4),
+        inset 0 1px 0 rgba(255,255,255,0.05);
       position:relative;
       overflow:hidden;
+      border:1.5px solid rgba(255,122,0,0.12);
     ">
 
-      <!-- glow energético premium -->
       <div style="
         position:absolute;
         top:-80px;
         right:-80px;
-        width:200px;
-        height:200px;
-        background: radial-gradient(circle, rgba(255,140,0,0.22), transparent 65%);
-        filter: blur(10px);
-        animation:glowShift 6s ease-in-out infinite;
+        width:220px;
+        height:220px;
+        background:radial-gradient(circle, rgba(255,140,0,0.25), transparent 65%);
+        filter:blur(18px);
+        animation:teamGlowPremium 6s ease-in-out infinite;
       "></div>
 
-      <!-- barra lateral estilo liga -->
       <div style="
         position:absolute;
         left:0;
         top:0;
         bottom:0;
-        width:6px;
-        background: linear-gradient(180deg, #ff8c00, #ffb347, #ff8c00);
-        box-shadow: 0 0 18px rgba(255,140,0,0.35);
+        width:7px;
+        background:linear-gradient(180deg, var(--primary), var(--primary2), var(--primary));
+        box-shadow:0 0 22px rgba(255,122,0,0.35);
       "></div>
 
-      <!-- logo premium container -->
       <div style="
-        width:78px;
-        height:78px;
+        width:85px;
+        height:85px;
         border-radius:20px;
-        background: rgba(255,255,255,0.04);
+        background:rgba(255,255,255,0.05);
         display:flex;
         align-items:center;
         justify-content:center;
         box-shadow:
           inset 0 0 0 1px rgba(255,255,255,0.08),
-          0 14px 30px rgba(0,0,0,0.55);
-        transition:.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+          0 14px 35px rgba(0,0,0,0.5);
+        transition:.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        position:relative;
+        z-index:1;
+        border:1.5px solid rgba(255,122,0,0.12);
       ">
-        <img src="logo.png" alt="Time BSX" style="
-          width:60px;
-          height:60px;
-          object-fit:contain;
-        ">
+        <img src="logo.png" alt="Time BSX" style="width:65px;height:65px;object-fit:contain;">
       </div>
 
-      <!-- conteúdo principal -->
-      <div style="
-        display:flex;
-        flex-direction:column;
-        gap:10px;
-        flex:1;
-      ">
-
-        <!-- topo -->
-        <div style="
-          display:flex;
-          align-items:center;
-          justify-content:space-between;
-          gap:12px;
-        ">
-
-          <div style="
-            font-size:19px;
-            font-weight:900;
-            color:#fff;
-            letter-spacing:0.6px;
-          ">
+      <div style="flex:1;position:relative;z-index:1;">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:12px;flex-wrap:wrap;">
+          <div style="font-size:20px;font-weight:920;color:#fff;letter-spacing:0.8px;">
             🏀 Time BSX
           </div>
-
           <div style="
             display:flex;
             align-items:center;
-            gap:6px;
+            gap:7px;
             font-size:11px;
             font-weight:900;
-            padding:6px 12px;
+            padding:7px 14px;
             border-radius:999px;
-            color:orange;
-            background: rgba(255,140,0,0.10);
-            border:1px solid rgba(255,140,0,0.35);
+            color:var(--primary);
+            background:rgba(255,140,0,0.12);
+            border:1.2px solid rgba(255,140,0,0.35);
             white-space:nowrap;
-            animation:statusPulse 2s ease-in-out infinite;
+            animation:statusPremium 2.5s ease-in-out infinite;
+            letter-spacing:0.6px;
           ">
             <span style="
               width:7px;
               height:7px;
               border-radius:50%;
-              background:orange;
-              box-shadow:0 0 10px orange;
+              background:var(--primary);
+              box-shadow:0 0 10px var(--primary);
             "></span>
-            ELENCO ATIVO
+            ATIVO
           </div>
-
         </div>
-
-        <!-- elenco -->
-        <div style="
-          font-size:13px;
-          color:#d0d0d0;
-          letter-spacing:0.3px;
-          line-height:1.6;
-        ">
+        <div style="font-size:14px;color:#e0e0e0;letter-spacing:0.4px;margin-bottom:8px;font-weight:600;line-height:1.6;">
           Borges • Daniel • Eduardo • Victor
         </div>
-
-        <!-- subtítulo estilo scouting -->
-        <div style="
-          font-size:12px;
-          color:#8c8c8c;
-          line-height:1.4;
-        ">
+        <div style="font-size:12px;color:#8a8a8a;margin-bottom:12px;letter-spacing:0.3px;">
           • Elenco principal
         </div>
-
-        <!-- stats panel -->
-        <div style="
-          display:flex;
-          gap:10px;
-          flex-wrap:wrap;
-          margin-top:6px;
-        ">
-
+        <div style="display:flex;gap:11px;flex-wrap:wrap;">
           <div style="
-            padding:7px 12px;
-            border-radius:12px;
-            background: rgba(255,255,255,0.04);
-            border:1px solid rgba(255,255,255,0.06);
+            padding:8px 14px;
+            border-radius:11px;
+            background:rgba(255,255,255,0.04);
+            border:1.2px solid rgba(255,122,0,0.18);
             font-size:12px;
-            color:#cfcfcf;
-            transition:.3s;
+            color:#e0e0e0;
+            font-weight:600;
+            letter-spacing:0.3px;
           ">
             👥 4 jogadores
           </div>
-
           <div style="
-            padding:7px 12px;
-            border-radius:12px;
-            background: rgba(255,255,255,0.04);
-            border:1px solid rgba(255,255,255,0.06);
+            padding:8px 14px;
+            border-radius:11px;
+            background:rgba(255,255,255,0.04);
+            border:1.2px solid rgba(255,122,0,0.18);
             font-size:12px;
-            color:#cfcfcf;
-            transition:.3s;
+            color:#e0e0e0;
+            font-weight:600;
+            letter-spacing:0.3px;
           ">
             🏀 3x3 competitivo
           </div>
-
           <div style="
-            padding:7px 12px;
-            border-radius:12px;
-            background: rgba(255,140,0,0.08);
-            border:1px solid rgba(255,140,0,0.25);
+            padding:8px 14px;
+            border-radius:11px;
+            background:rgba(255,140,0,0.1);
+            border:1.2px solid rgba(255,140,0,0.3);
             font-size:12px;
-            color:orange;
+            color:var(--primary);
             font-weight:800;
-            transition:.3s;
+            letter-spacing:0.3px;
           ">
             🔥 em destaque
           </div>
-
         </div>
-
       </div>
 
     </div>
 
     <style>
-      @keyframes glowShift{
-        0%, 100%{opacity:0.6}
-        50%{opacity:1}
+      @keyframes teamGlowPremium{
+        0%, 100%{opacity:0.5}
+        50%{opacity:0.9}
       }
-      @keyframes statusPulse{
-        0%, 100%{box-shadow:0 0 0 0 rgba(255,140,0,0.5)}
-        50%{box-shadow:0 0 0 6px rgba(255,140,0,0)}
+      @keyframes statusPremium{
+        0%, 100%{box-shadow:0 0 0 0 rgba(255,140,0,0.4)}
+        50%{box-shadow:0 0 0 8px rgba(255,140,0,0)}
       }
     </style>
 
   </div>
 </div>
 
+<!-- CAMPEONATOS -->
 <div id="campeonatos" class="section">
   <div class="card">
-
     <h2 style="
       text-align:center;
       color:var(--primary);
-      margin-bottom:20px;
-      letter-spacing:0.6px;
-      font-size:22px;
+      margin-bottom:24px;
+      letter-spacing:1px;
+      font-size:24px;
+      font-weight:850;
     ">
       🏆 Campeonatos
     </h2>
-
     <div class="card" style="
-      position:relative;
-      padding:18px;
-      border-radius:16px;
-      background: linear-gradient(135deg, #1b1b1b, #111);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.35);
-      overflow:hidden;
-      transition:.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      background:linear-gradient(135deg, rgba(27,27,27,0.8), rgba(17,17,17,0.9));
+      border-left:7px solid var(--primary);
     ">
-
-      <!-- barra lateral moderna -->
-      <div style="
-        position:absolute;
-        left:0;
-        top:0;
-        bottom:0;
-        width:5px;
-        background: linear-gradient(180deg, orange, #ff7a00, #ffb347);
-        box-shadow:0 0 15px rgba(255,122,0,0.4);
-      "></div>
-
-      <div style="display:flex; align-items:flex-start; gap:14px;">
-
+      <div style="display:flex;align-items:flex-start;gap:18px;">
         <img src="bsl.png" alt="BSL Logo" style="
-          width:64px;
-          height:64px;
-          border-radius:14px;
+          width:72px;
+          height:72px;
+          border-radius:16px;
           background:#fff;
-          padding:6px;
+          padding:8px;
           object-fit:contain;
-          box-shadow: 0 6px 14px rgba(0,0,0,0.25);
+          box-shadow:0 10px 28px rgba(0,0,0,0.35);
           flex-shrink:0;
-          transition:.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+          transition:.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+          border:1.5px solid rgba(255,122,0,0.15);
         ">
-
-        <div style="display:flex; flex-direction:column; gap:6px; flex:1;">
-
-          <!-- STATUS -->
+        <div style="display:flex;flex-direction:column;gap:8px;flex:1;width:100%;">
           <span style="
-            background: rgba(255,165,0,0.12);
-            color: orange;
-            padding:6px 12px;
+            background:rgba(255,165,0,0.13);
+            color:var(--primary);
+            padding:7px 14px;
             font-size:11px;
             border-radius:999px;
-            font-weight:800;
-            letter-spacing:0.6px;
+            font-weight:850;
+            letter-spacing:0.9px;
             border:1px solid rgba(255,165,0,0.4);
             display:flex;
             align-items:center;
-            gap:6px;
+            gap:7px;
             width:fit-content;
-            animation:statusGlow 2s ease-in-out infinite;
+            animation:statusGlowPremium 2.2s ease-in-out infinite;
           ">
             <span style="
-              width:6px;
-              height:6px;
-              background:orange;
+              width:7px;
+              height:7px;
+              background:var(--primary);
               border-radius:50%;
               display:inline-block;
-              box-shadow:0 0 8px orange;
+              box-shadow:0 0 10px var(--primary);
             "></span>
             EM ANDAMENTO
           </span>
-
           <strong style="
-            font-size:18px;
+            font-size:19px;
             color:#fff;
-            letter-spacing:0.3px;
+            letter-spacing:0.5px;
+            font-weight:850;
+            line-height:1.3;
           ">
             BSL 3x3 Caçador
           </strong>
-
           <span style="
             color:#b8b8b8;
             font-size:13px;
-            line-height:1.4;
-            max-width:320px;
+            line-height:1.5;
           ">
             Competição de basquete 3x3
           </span>
-
           <div style="
-            margin-top:6px;
+            margin-top:8px;
             display:flex;
             align-items:center;
-            gap:8px;
-            color:orange;
-            font-weight:700;
+            gap:10px;
+            color:var(--primary);
+            font-weight:750;
             font-size:13px;
+            flex-wrap:wrap;
           ">
             📅 26 Abril 2026
-            <span style="color:#666;">•</span>
-            <span style="color:#aaa; font-weight:500;">Local: SC - Caçador</span>
+            <span style="color:#555;">•</span>
+            <span style="color:#aaa;font-weight:500;">Local: SC - Caçador</span>
           </div>
-
         </div>
       </div>
-
       <style>
-        @keyframes statusGlow{
-          0%, 100%{box-shadow:inset 0 0 0 1px rgba(255,165,0,0.4)}
-          50%{box-shadow:inset 0 0 12px rgba(255,165,0,0.3), 0 0 12px rgba(255,165,0,0.3)}
+        @keyframes statusGlowPremium{
+          0%, 100%{box-shadow:inset 0 0 0 1px rgba(255,140,0,0.3)}
+          50%{box-shadow:inset 0 0 12px rgba(255,140,0,0.25), 0 0 12px rgba(255,140,0,0.25)}
         }
       </style>
-
     </div>
   </div>
 </div>
 
+<!-- FOTOS -->
 <div id="fotos" class="section">
   <div class="card">
     <div class="gallery" id="gallery"></div>
   </div>
 </div>
 
+<!-- REDES -->
 <div id="redes" class="section">
   <div class="card">
-
     <div style="
-      padding:18px;
-      border-radius:18px;
-      background: linear-gradient(145deg, #1a1a1a, #0b0b0b);
-      box-shadow: 0 18px 40px rgba(0,0,0,0.55);
+      padding:28px;
+      border-radius:24px;
+      background:linear-gradient(135deg, rgba(27,27,27,0.8), rgba(11,11,11,0.95));
+      box-shadow:0 20px 50px rgba(0,0,0,0.5);
+      border:1.5px solid rgba(255,122,0,0.12);
       position:relative;
       overflow:hidden;
     ">
-
-      <!-- glow -->
       <div style="
         position:absolute;
-        top:-70px;
-        right:-70px;
-        width:180px;
-        height:180px;
-        background: radial-gradient(circle, rgba(255,140,0,0.18), transparent 65%);
-        filter: blur(8px);
-        animation:socialGlow 5s ease-in-out infinite;
+        top:-80px;
+        right:-80px;
+        width:200px;
+        height:200px;
+        background:radial-gradient(circle, rgba(255,140,0,0.22), transparent 65%);
+        filter:blur(18px);
+        animation:redesGlowPremium 6s ease-in-out infinite;
       "></div>
-
-      <!-- título -->
       <div style="
-        font-size:18px;
-        font-weight:900;
+        font-size:20px;
+        font-weight:920;
         color:#fff;
-        margin-bottom:14px;
-        letter-spacing:0.5px;
-      ">
-        🌐 Redes oficiais
-      </div>
-
-      <!-- descrição -->
-      <div style="
-        font-size:12px;
-        color:#9a9a9a;
         margin-bottom:16px;
-        line-height:1.4;
+        letter-spacing:0.8px;
+        position:relative;
+        z-index:1;
+      ">
+        🌐 Redes Oficiais
+      </div>
+      <div style="
+        font-size:13px;
+        color:#9d9d9d;
+        margin-bottom:20px;
+        line-height:1.6;
+        position:relative;
+        z-index:1;
+        letter-spacing:0.4px;
       ">
         Acesse os canais oficiais da Liga BSX para novidades, jogos e contato direto.
       </div>
-
-      <!-- botões -->
-      <div style="
-        display:flex;
-        flex-direction:column;
-        gap:10px;
-      ">
-
-        <!-- Instagram -->
+      <div style="display:flex;flex-direction:column;gap:12px;position:relative;z-index:1;">
         <div onclick="openInsta()" style="
           display:flex;
           align-items:center;
           justify-content:space-between;
-          padding:12px 14px;
-          border-radius:14px;
-          background: rgba(255,255,255,0.04);
-          border:1px solid rgba(255,255,255,0.06);
+          padding:15px 16px;
+          border-radius:16px;
+          background:rgba(255,255,255,0.04);
+          border:1.5px solid rgba(255,122,0,0.16);
           cursor:pointer;
-          transition:.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-          position:relative;
-          overflow:hidden;
+          transition:.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+          box-shadow:0 6px 20px rgba(0,0,0,0.25);
         ">
-
-          <div style="display:flex; align-items:center; gap:10px; z-index:1;">
+          <div style="display:flex;align-items:center;gap:12px;flex:1;">
             <div style="
-              width:34px;
-              height:34px;
-              border-radius:10px;
-              background: radial-gradient(circle at 30% 30%, #ffcc70, #c13584, #5851db);
-              box-shadow: 0 6px 14px rgba(0,0,0,0.35);
-              transition:.3s;
+              width:40px;
+              height:40px;
+              border-radius:12px;
+              background:radial-gradient(circle at 30% 30%, #ffcc70, #c13584, #5851db);
+              box-shadow:0 8px 18px rgba(0,0,0,0.3);
+              flex-shrink:0;
             "></div>
-
-            <div>
-              <div style="color:#fff; font-weight:800; font-size:13px;">
+            <div style="flex:1;">
+              <div style="color:#fff;font-weight:800;font-size:14px;letter-spacing:0.5px;">
                 Instagram
               </div>
-              <div style="color:#8a8a8a; font-size:11px;">
+              <div style="color:#8d8d8d;font-size:12px;letter-spacing:0.3px;margin-top:2px;">
                 Veja fotos e atualizações
               </div>
             </div>
           </div>
-
-          <div style="color:#666; z-index:1; font-size:18px;">›</div>
-
+          <div style="color:#888;font-size:20px;font-weight:500;">›</div>
         </div>
-
-        <!-- WhatsApp -->
         <div onclick="openZap()" style="
           display:flex;
           align-items:center;
           justify-content:space-between;
-          padding:12px 14px;
-          border-radius:14px;
-          background: rgba(255,255,255,0.04);
-          border:1px solid rgba(255,255,255,0.06);
+          padding:15px 16px;
+          border-radius:16px;
+          background:rgba(255,255,255,0.04);
+          border:1.5px solid rgba(255,122,0,0.16);
           cursor:pointer;
-          transition:.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-          position:relative;
-          overflow:hidden;
+          transition:.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+          box-shadow:0 6px 20px rgba(0,0,0,0.25);
         ">
-
-          <div style="display:flex; align-items:center; gap:10px; z-index:1;">
+          <div style="display:flex;align-items:center;gap:12px;flex:1;">
             <div style="
-              width:34px;
-              height:34px;
-              border-radius:10px;
+              width:40px;
+              height:40px;
+              border-radius:12px;
               background:#25D366;
-              box-shadow: 0 6px 14px rgba(0,0,0,0.35);
-              transition:.3s;
+              box-shadow:0 8px 18px rgba(0,0,0,0.3);
+              flex-shrink:0;
             "></div>
-
-            <div>
-              <div style="color:#fff; font-weight:800; font-size:13px;">
+            <div style="flex:1;">
+              <div style="color:#fff;font-weight:800;font-size:14px;letter-spacing:0.5px;">
                 WhatsApp
               </div>
-              <div style="color:#8a8a8a; font-size:11px;">
+              <div style="color:#8d8d8d;font-size:12px;letter-spacing:0.3px;margin-top:2px;">
                 Faça parte do nosso grupo de rachas
               </div>
             </div>
           </div>
-
-          <div style="color:#666; z-index:1; font-size:18px;">›</div>
-
+          <div style="color:#888;font-size:20px;font-weight:500;">›</div>
         </div>
-
       </div>
-
       <style>
-        @keyframes socialGlow{
-          0%, 100%{opacity:0.5}
-          50%{opacity:0.9}
+        @keyframes redesGlowPremium{
+          0%, 100%{opacity:0.4}
+          50%{opacity:0.8}
         }
       </style>
-
     </div>
-
   </div>
 </div>
 
-<!-- SEÇÃO RANKING -->
+<!-- RANKING -->
 <div id="ranking" class="section">
   <div class="card">
-
-    <h2 style="margin-bottom:15px; color:var(--primary); text-align:center; letter-spacing:1px;">
-      🏆 Ranking de Times BSX
+    <h2 style="
+      margin-bottom:22px;
+      color:var(--primary);
+      text-align:center;
+      letter-spacing:1px;
+      font-size:24px;
+      font-weight:850;
+    ">
+      🏆 Ranking de Times
     </h2>
-
-    <!-- 1º LUGAR -->
-    <div class="card" style="border-left: 5px solid gold; transition:.4s cubic-bezier(0.34, 1.56, 0.64, 1);">
-      <div class="team" style="align-items:center; display:flex; gap:10px;">
-        <img src="logo.png" width="55" alt="BSX Logo" style="transition:.4s cubic-bezier(0.34, 1.56, 0.64, 1);">
+    <div class="card" style="
+      border-left:7px solid gold;
+      background:linear-gradient(135deg, rgba(255,215,0,0.08), rgba(255,215,0,0.03));
+    ">
+      <div class="team" style="align-items:center;display:flex;gap:14px;">
+        <img src="logo.png" width="60" alt="BSX Logo" style="
+          transition:.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+          filter:drop-shadow(0 0 18px rgba(255,215,0,0.25));
+          border-radius:12px;
+        ">
         <div>
-          <strong style="font-size:18px;">🥇 1º Lugar - BSX</strong><br>
-          <span style="color:gray;">Time oficial da liga</span>
+          <strong style="font-size:19px;font-weight:850;letter-spacing:0.5px;">🥇 1º Lugar - BSX</strong><br>
+          <span style="color:#8a8a8a;font-size:12px;letter-spacing:0.3px;">Time oficial da liga</span>
         </div>
       </div>
     </div>
-
-    <!-- 2º LUGAR -->
-    <div class="card" style="border-left: 5px solid silver; opacity:0.9; transition:.4s cubic-bezier(0.34, 1.56, 0.64, 1);">
-      <div class="team">
-        <div>
-          <strong>🥈 2º Lugar</strong><br>
-          <span style="color:gray;">Vaga disponível para time</span>
-        </div>
-      </div>
+    <div class="card" style="border-left:7px solid silver;opacity:0.92;background:linear-gradient(135deg, rgba(192,192,192,0.05), rgba(192,192,192,0.02));">
+      <strong style="font-size:17px;font-weight:800;">🥈 2º Lugar</strong><br>
+      <span style="color:#8a8a8a;font-size:12px;letter-spacing:0.3px;">Vaga disponível para time</span>
     </div>
-
-    <!-- 3º LUGAR -->
-    <div class="card" style="border-left: 5px solid #cd7f32; opacity:0.85; transition:.4s cubic-bezier(0.34, 1.56, 0.64, 1);">
-      <div class="team">
-        <div>
-          <strong>🥉 3º Lugar</strong><br>
-          <span style="color:gray;">Vaga disponível para time</span>
-        </div>
-      </div>
+    <div class="card" style="border-left:7px solid #cd7f32;opacity:0.88;background:linear-gradient(135deg, rgba(205,127,50,0.05), rgba(205,127,50,0.02));">
+      <strong style="font-size:17px;font-weight:800;">🥉 3º Lugar</strong><br>
+      <span style="color:#8a8a8a;font-size:12px;letter-spacing:0.3px;">Vaga disponível para time</span>
     </div>
-
-    <!-- 4º LUGAR -->
-    <div class="card" style="opacity:0.8; transition:.4s cubic-bezier(0.34, 1.56, 0.64, 1);">
-      <div class="team">
-        <div>
-          <strong>4º Lugar</strong><br>
-          <span style="color:gray;">Vaga disponível para time</span>
-        </div>
-      </div>
+    <div class="card" style="opacity:0.82;background:linear-gradient(135deg, rgba(100,100,100,0.05), rgba(100,100,100,0.02));">
+      <strong style="font-size:17px;font-weight:800;">4º Lugar</strong><br>
+      <span style="color:#8a8a8a;font-size:12px;letter-spacing:0.3px;">Vaga disponível para time</span>
     </div>
-
   </div>
+</div>
+
 </div>
 
 <!-- MODAL -->
@@ -1409,22 +1366,17 @@ nav button:active{
   <img id="modalImg">
 </div>
 
-<!-- MUSIC PLAYER MODERNO -->
+<!-- MUSIC PLAYER -->
 <div id="musicPlayer" class="minimized">
-
   <div id="playerHeader" onclick="togglePlayer()">
     🎧 Player
     <span id="toggleIcon">X</span>
   </div>
-
   <div id="playerContent">
-
     <audio id="audio"></audio>
-
     <button onclick="toggleMusic()" class="playBtn">
       ▶ Play / Pause
     </button>
-
     <select onchange="changeMusic(this.value)">
       <option value="musica1.mp3">🎵 Música 1</option>
       <option value="musica2.mp3">🎵 Música 2</option>
@@ -1437,73 +1389,117 @@ nav button:active{
       <option value="musica9.mp3">🎵 Música 9</option>
       <option value="musica10.mp3">🎵 Música 10</option>
     </select>
-
   </div>
 </div>
 
 <script>
+const canvas = document.getElementById('particleCanvas');
+const ctx = canvas.getContext('2d');
 
-const audio=document.getElementById("audio");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
-/* LOADING */
-window.onload=()=>{
-  setTimeout(()=>{
-    document.getElementById("loading").style.display="none";
-  },1800);
+class Particle {
+  constructor() {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
+    this.size = Math.random() * 2.5 + 0.5;
+    this.speedX = (Math.random() - 0.5) * 0.8;
+    this.speedY = (Math.random() - 0.5) * 0.8;
+    this.opacity = Math.random() * 0.4 + 0.1;
+  }
 
-  audio.src="musica1.mp3";
+  update() {
+    this.x += this.speedX;
+    this.y += this.speedY;
+    if (this.x > canvas.width) this.x = 0;
+    if (this.x < 0) this.x = canvas.width;
+    if (this.y > canvas.height) this.y = 0;
+    if (this.y < 0) this.y = canvas.height;
+  }
+
+  draw() {
+    ctx.fillStyle = `rgba(255,122,0,${this.opacity})`;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
+const particles = [];
+for (let i = 0; i < 45; i++) {
+  particles.push(new Particle());
+}
+
+function animateParticles() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particles.forEach(p => {
+    p.update();
+    p.draw();
+  });
+  requestAnimationFrame(animateParticles);
+}
+
+animateParticles();
+
+window.addEventListener('resize', () => {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+});
+
+const audio = document.getElementById('audio');
+window.onload = () => {
+  setTimeout(() => {
+    document.getElementById('loading').style.display = 'none';
+  }, 2000);
+  audio.src = 'musica1.mp3';
 };
 
-/* SECTIONS */
-function showSection(id){
-  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
 }
 
-/* GALLERY */
-function addImage(src){
-  const img=document.createElement("img");
-  img.src=src;
-  img.onclick=()=>{
-    modal.style.display="flex";
-    modalImg.src=src;
+function addImage(src) {
+  const img = document.createElement('img');
+  img.src = src;
+  img.onclick = () => {
+    document.getElementById('modal').style.display = 'flex';
+    document.getElementById('modalImg').src = src;
   };
-  document.getElementById("gallery").appendChild(img);
+  document.getElementById('gallery').appendChild(img);
 }
 
-addImage("logo.png");
-addImage("logo2.png");
-addImage("bsl.png")
+addImage('logo.png');
+addImage('logo2.png');
+addImage('bsl.png');
 
-/* MODAL */
-function closeModal(){
-  modal.style.display="none";
+function closeModal() {
+  document.getElementById('modal').style.display = 'none';
 }
 
-/* MUSIC */
-function toggleMusic(){
-  if(audio.paused) audio.play();
+function toggleMusic() {
+  if (audio.paused) audio.play();
   else audio.pause();
 }
 
-function togglePlayer(){
-  const player = document.getElementById("musicPlayer");
-  const icon = document.getElementById("toggleIcon");
-
-  player.classList.toggle("minimized");
-
-  icon.innerText = player.classList.contains("minimized") ? "X" : "X";
+function togglePlayer() {
+  const player = document.getElementById('musicPlayer');
+  player.classList.toggle('minimized');
 }
 
-function changeMusic(src){
-  audio.src=src;
+function changeMusic(src) {
+  audio.src = src;
   audio.play();
 }
 
-/* SOCIAL */
-function openInsta(){window.open("https://instagram.com/conta.bsx/","_blank")}
-function openZap(){window.open("https://chat.whatsapp.com/ItE2VtOWXLeDyo9k7w4knw","_blank")}
+function openInsta() {
+  window.open('https://instagram.com/conta.bsx/', '_blank');
+}
 
+function openZap() {
+  window.open('https://chat.whatsapp.com/ItE2VtOWXLeDyo9k7w4knw', '_blank');
+}
 </script>
 
 </body>
