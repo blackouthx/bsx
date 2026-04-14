@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BSX Liga</title>
+<link rel="icon" href="logo2.ico">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --primary:#ff7a00;
+  --primary2:#ff3c00;
+  --bg:#050505;
+  --glass:rgba(255,255,255,0.06);
+  --glass2:rgba(255,255,255,0.03);
+  --text:#ffffff;
+  --muted:#b8b8b8;
+  --blur:blur(20px);
+}
+
+/* RESET */
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+  font-family:Inter,sans-serif;
+  background: radial-gradient(circle at top,#1a1a1a,#050505 60%);
+  color:var(--text);
+  overflow-x:hidden;
+}
+
+/* FUNDO ANIMADO */
+body::before{
+  content:"";
+  position:fixed;
+  inset:-200px;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(255,122,0,0.15), transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(255,60,0,0.12), transparent 40%);
+  animation:moveBg 10s infinite alternate ease-in-out;
+  z-index:-1;
+}
+
+@keyframes moveBg{
+  0%{transform:translate(0,0)}
+  100%{transform:translate(-40px,30px)}
+}
+
+/* LOADING */
+#loading{
+  position:fixed;
+  inset:0;
+  background:#050505;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+}
+
+.loader{
+  width:70px;
+  height:70px;
+  border-radius:50%;
+  border:4px solid rgba(255,122,0,0.2);
+  border-top:4px solid var(--primary);
+  animation:spin 1s linear infinite;
+  box-shadow:0 0 30px rgba(255,122,0,0.3);
+}
+
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* HEADER */
+header{
+  padding:28px;
+  text-align:center;
+  background:linear-gradient(135deg,var(--primary),var(--primary2));
+  box-shadow:0 10px 50px rgba(255,122,0,0.3);
+}
+
+header img{
+  width:95px;
+  border-radius:18px;
+  transition:.3s;
+  filter:drop-shadow(0 0 10px rgba(0,0,0,0.4));
+}
+
+header img:hover{transform:scale(1.1) rotate(2deg)}
+
+/* NAV */
+nav{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  padding:12px;
+  position:sticky;
+  top:0;
+  z-index:10;
+  background:rgba(10,10,10,0.6);
+  backdrop-filter:var(--blur);
+  border-bottom:1px solid rgba(255,122,0,0.2);
+}
+
+nav button{
+  background:var(--glass2);
+  border:1px solid rgba(255,255,255,0.08);
+  color:#ccc;
+  padding:10px 16px;
+  border-radius:999px;
+  font-size:13px;
+  cursor:pointer;
+  transition:.25s;
+}
+
+nav button:hover{
+  background:rgba(255,122,0,0.2);
+  color:#fff;
+  transform:translateY(-2px);
+  box-shadow:0 0 15px rgba(255,122,0,0.3);
+}
+
+/* CONTAINER */
+.container{
+  max-width:1100px;
+  margin:auto;
+  padding:25px;
+}
+
+/* SEÇÕES */
+.section{
+  display:none;
+  opacity:0;
+  transform:translateY(20px);
+  transition:.5s;
+}
+
+.active{
+  display:block;
+  opacity:1;
+  transform:translateY(0);
+}
+
+/* HERO */
+.hero{
+  text-align:center;
+  margin:30px 0;
+}
+
+.hero h1{
+  font-size:60px;
+  background:linear-gradient(90deg,var(--primary),#fff);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  letter-spacing:2px;
+}
+
+.hero p{
+  color:var(--muted);
+}
+
+/* CARD */
+.card{
+  background:var(--glass);
+  backdrop-filter:var(--blur);
+  padding:22px;
+  border-radius:20px;
+  margin-bottom:15px;
+  border:1px solid rgba(255,255,255,0.06);
+  transition:.3s;
+  box-shadow:0 10px 30px rgba(0,0,0,0.3);
+}
+
+.card:hover{
+  transform:translateY(-6px);
+  border:1px solid rgba(255,122,0,0.3);
+}
+
+/* TEAM / CHAMP */
+.team,.champ{
+  display:flex;
+  align-items:center;
+  gap:15px;
+}
+
+/* GALLERY */
+.gallery{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
+  gap:12px;
+}
+
+.gallery img{
+  width:140px;
+  height:140px;
+  object-fit:cover;
+  border-radius:14px;
+  cursor:pointer;
+  transition:.25s;
+  box-shadow:0 10px 25px rgba(0,0,0,0.3);
+}
+
+.gallery img:hover{
+  transform:scale(1.07);
+  box-shadow:0 0 25px rgba(255,122,0,0.4);
+}
+
+/* SOCIAL */
+.social{
+  padding:14px;
+  border-radius:12px;
+  background:var(--glass2);
+  margin-bottom:10px;
+  cursor:pointer;
+  transition:.25s;
+}
+
+.social:hover{
+  background:var(--primary);
+  color:#000;
+  transform:scale(1.02);
+}
+
+/* MODAL */
+#modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.95);
+  justify-content:center;
+  align-items:center;
+  z-index:999;
+}
+
+#modal img{
+  max-width:90%;
+  border-radius:16px;
+  box-shadow:0 0 40px rgba(255,122,0,0.3);
+}
+
+/* ===== MUSIC PLAYER NOVO ===== */
+
+#musicPlayer{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  width:260px;
+  border-radius:18px;
+  background:rgba(10,10,10,0.75);
+  backdrop-filter:blur(18px);
+  border:1px solid rgba(255,122,0,0.3);
+  box-shadow:0 10px 40px rgba(0,0,0,0.5);
+  overflow:hidden;
+  transition:.4s;
+}
+
+/* HEADER */
+#playerHeader{
+  padding:12px;
+  font-weight:600;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  cursor:pointer;
+  background:linear-gradient(135deg,var(--primary),var(--primary2));
+  color:#fff;
+}
+
+/* CONTENT */
+#playerContent{
+  padding:12px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  transition:.3s;
+}
+
+/* BOTÃO */
+.playBtn{
+  padding:10px;
+  border:none;
+  border-radius:12px;
+  background:linear-gradient(135deg,var(--primary),var(--primary2));
+  color:#fff;
+  font-weight:600;
+  cursor:pointer;
+  transition:.25s;
+}
+
+.playBtn:hover{
+  transform:scale(1.05);
+  box-shadow:0 0 20px rgba(255,122,0,0.5);
+}
+
+/* SELECT */
+#musicPlayer select{
+  padding:8px;
+  border-radius:10px;
+  border:none;
+  background:#111;
+  color:#fff;
+  cursor:pointer;
+}
+
+/* MINIMIZADO */
+#musicPlayer.minimized #playerContent{
+  display:none;
+}
+
+#musicPlayer.minimized{
+  width:180px;
+}
+
+/* RESPONSIVO */
+@media(max-width:800px){
+  .hero h1{font-size:34px}
+  nav{flex-wrap:wrap}
+  .gallery img{width:110px;height:110px}
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="loading">
+  <div class="loader"></div>
+  <p style="margin-top:15px;color:#aaa">Carregando BSX...</p>
+</div>
+
+<header>
+  <img src="logo.png">
+</header>
+
+<nav>
+  <button onclick="showSection('home')">Início</button>
+  <button onclick="showSection('times')">Times</button>
+  <button onclick="showSection('campeonatos')">Campeonatos</button>
+  <button onclick="showSection('fotos')">Fotos</button>
+  <button onclick="showSection('redes')">Redes</button>
+  <button onclick="showSection('ranking')">Ranking</button>
+</nav>
+
+<div class="container">
+
+<div id="home" class="section active">
+
+  <!-- HERO PRINCIPAL -->
+  <div class="hero" style="
+    padding:34px 22px;
+    border-radius:24px;
+    background: radial-gradient(circle at top, #1b1b1b, #0a0a0a 70%);
+    box-shadow: 0 30px 70px rgba(0,0,0,0.75);
+    position:relative;
+    overflow:hidden;
+    text-align:center;
+  ">
+
+    <!-- energia de fundo -->
+    <div style="
+      position:absolute;
+      top:-120px;
+      left:50%;
+      transform:translateX(-50%);
+      width:320px;
+      height:320px;
+      background: radial-gradient(circle, rgba(255,140,0,0.28), transparent 70%);
+      filter: blur(16px);
+    "></div>
+
+    <!-- linhas decorativas -->
+    <div style="
+      position:absolute;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);
+      opacity:0.4;
+      pointer-events:none;
+    "></div>
+
+    <!-- badge oficial -->
+    <div style="
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:7px 16px;
+      border-radius:999px;
+      background: rgba(255,140,0,0.12);
+      border:1px solid rgba(255,140,0,0.35);
+      color:orange;
+      font-size:11px;
+      font-weight:900;
+      letter-spacing:1px;
+      margin-bottom:16px;
+    ">
+      🏀 Seja bem vindo(a)
+    </div>
+
+    <!-- título forte -->
+    <h1 style="
+      margin:0;
+      font-size:38px;
+      font-weight:900;
+      color:#fff;
+      letter-spacing:1.5px;
+      text-shadow:0 12px 40px rgba(0,0,0,0.8);
+    ">
+      BSX LIGA
+    </h1>
+
+    <!-- subtítulo -->
+    <p style="
+      margin-top:10px;
+      color:#c2c2c2;
+      font-size:15px;
+      letter-spacing:0.4px;
+    ">
+      Liga de Rachas em Xanxerê 🏀
+    </p>
+
+    <!-- destaque info -->
+    <div style="
+      margin-top:18px;
+      display:flex;
+      justify-content:center;
+      gap:10px;
+      flex-wrap:wrap;
+    ">
+
+      <div style="
+        padding:7px 14px;
+        border-radius:14px;
+        background: rgba(255,255,255,0.04);
+        border:1px solid rgba(255,255,255,0.06);
+        font-size:12px;
+        color:#d0d0d0;
+      ">
+        🏆 Ranking
+      </div>
+
+      <div style="
+        padding:7px 14px;
+        border-radius:14px;
+        background: rgba(255,255,255,0.04);
+        border:1px solid rgba(255,255,255,0.06);
+        font-size:12px;
+        color:#d0d0d0;
+      ">
+        🏀 Rachas
+      </div>
+
+      <div style="
+        padding:7px 14px;
+        border-radius:14px;
+        background: rgba(255,140,0,0.10);
+        border:1px solid rgba(255,140,0,0.25);
+        font-size:12px;
+        color:orange;
+        font-weight:800;
+      ">
+        🔥 comunidade ativa
+      </div>
+
+    </div>
+
+    <!-- separador visual -->
+    <div style="
+      margin-top:22px;
+      width:60px;
+      height:2px;
+      background: linear-gradient(90deg, transparent, orange, transparent);
+      margin-left:auto;
+      margin-right:auto;
+      opacity:0.7;
+    "></div>
+
+  </div>
+
+  <!-- SOBRE -->
+  <div class="card" style="
+    margin-top:18px;
+    padding:22px;
+    border-radius:20px;
+    background: linear-gradient(145deg, #181818, #0c0c0c);
+    box-shadow: 0 22px 50px rgba(0,0,0,0.6);
+    position:relative;
+    overflow:hidden;
+  ">
+
+    <!-- lateral glow -->
+    <div style="
+      position:absolute;
+      left:0;
+      top:0;
+      bottom:0;
+      width:6px;
+      background: linear-gradient(180deg, #ff8c00, #ffb347, #ff8c00);
+      box-shadow: 0 0 20px rgba(255,140,0,0.4);
+    "></div>
+
+    <div style="
+      font-size:13px;
+      color:#cfcfcf;
+      line-height:1.8;
+      letter-spacing:0.3px;
+    ">
+      Criada em 2025, a BSX LIGA nasceu com o objetivo de fortalecer e divulgar a cultura do basquete em Xanxerê e região.
+      A iniciativa organiza rachas em quadras públicas e também em espaços reservados, promovendo competitividade,
+      união entre atletas e a evolução do jogo de rua.
+    </div>
+
+  </div>
+
+</div>
+
+<div id="times" class="section">
+  <div class="card">
+
+    <div class="team" style="
+      display:flex;
+      align-items:center;
+      gap:18px;
+      padding:22px;
+      border-radius:22px;
+      background: linear-gradient(145deg, #1a1a1a, #0a0a0a);
+      box-shadow: 0 22px 50px rgba(0,0,0,0.65);
+      position:relative;
+      overflow:hidden;
+    ">
+
+      <!-- glow energético premium -->
+      <div style="
+        position:absolute;
+        top:-80px;
+        right:-80px;
+        width:200px;
+        height:200px;
+        background: radial-gradient(circle, rgba(255,140,0,0.22), transparent 65%);
+        filter: blur(10px);
+      "></div>
+
+      <!-- barra lateral estilo liga -->
+      <div style="
+        position:absolute;
+        left:0;
+        top:0;
+        bottom:0;
+        width:6px;
+        background: linear-gradient(180deg, #ff8c00, #ffb347, #ff8c00);
+        box-shadow: 0 0 18px rgba(255,140,0,0.35);
+      "></div>
+
+      <!-- logo premium container -->
+      <div style="
+        width:78px;
+        height:78px;
+        border-radius:20px;
+        background: rgba(255,255,255,0.04);
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        box-shadow:
+          inset 0 0 0 1px rgba(255,255,255,0.08),
+          0 14px 30px rgba(0,0,0,0.55);
+      ">
+        <img src="logo.png" alt="Time BSX" style="
+          width:60px;
+          height:60px;
+          object-fit:contain;
+        ">
+      </div>
+
+      <!-- conteúdo principal -->
+      <div style="
+        display:flex;
+        flex-direction:column;
+        gap:10px;
+        flex:1;
+      ">
+
+        <!-- topo -->
+        <div style="
+          display:flex;
+          align-items:center;
+          justify-content:space-between;
+          gap:12px;
+        ">
+
+          <div style="
+            font-size:19px;
+            font-weight:900;
+            color:#fff;
+            letter-spacing:0.6px;
+          ">
+            🏀 Time BSX
+          </div>
+
+          <div style="
+            display:flex;
+            align-items:center;
+            gap:6px;
+            font-size:11px;
+            font-weight:900;
+            padding:6px 12px;
+            border-radius:999px;
+            color:orange;
+            background: rgba(255,140,0,0.10);
+            border:1px solid rgba(255,140,0,0.35);
+            white-space:nowrap;
+          ">
+            <span style="
+              width:7px;
+              height:7px;
+              border-radius:50%;
+              background:orange;
+              box-shadow:0 0 10px orange;
+            "></span>
+            ELENCO ATIVO
+          </div>
+
+        </div>
+
+        <!-- elenco -->
+        <div style="
+          font-size:13px;
+          color:#d0d0d0;
+          letter-spacing:0.3px;
+          line-height:1.6;
+        ">
+          Borges • Daniel • Eduardo • Victor
+        </div>
+
+        <!-- subtítulo estilo scouting -->
+        <div style="
+          font-size:12px;
+          color:#8c8c8c;
+          line-height:1.4;
+        ">
+          • Elenco principal
+        </div>
+
+        <!-- stats panel -->
+        <div style="
+          display:flex;
+          gap:10px;
+          flex-wrap:wrap;
+          margin-top:6px;
+        ">
+
+          <div style="
+            padding:7px 12px;
+            border-radius:12px;
+            background: rgba(255,255,255,0.04);
+            border:1px solid rgba(255,255,255,0.06);
+            font-size:12px;
+            color:#cfcfcf;
+          ">
+            👥 4 jogadores
+          </div>
+
+          <div style="
+            padding:7px 12px;
+            border-radius:12px;
+            background: rgba(255,255,255,0.04);
+            border:1px solid rgba(255,255,255,0.06);
+            font-size:12px;
+            color:#cfcfcf;
+          ">
+            🏀 3x3 competitivo
+          </div>
+
+          <div style="
+            padding:7px 12px;
+            border-radius:12px;
+            background: rgba(255,140,0,0.08);
+            border:1px solid rgba(255,140,0,0.25);
+            font-size:12px;
+            color:orange;
+            font-weight:800;
+          ">
+            🔥 em destaque
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<div id="campeonatos" class="section">
+  <div class="card">
+
+    <h2 style="
+      text-align:center;
+      color:var(--primary);
+      margin-bottom:20px;
+      letter-spacing:0.6px;
+      font-size:22px;
+    ">
+      🏆 Campeonatos
+    </h2>
+
+    <div class="card" style="
+      position:relative;
+      padding:18px;
+      border-radius:16px;
+      background: linear-gradient(135deg, #1b1b1b, #111);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.35);
+      overflow:hidden;
+    ">
+
+      <!-- barra lateral moderna -->
+      <div style="
+        position:absolute;
+        left:0;
+        top:0;
+        bottom:0;
+        width:5px;
+        background: linear-gradient(180deg, orange, #ff7a00, #ffb347);
+      "></div>
+
+      <!-- STATUS -->
+      <span style="
+        position:absolute;
+        top:14px;
+        right:14px;
+        background: rgba(255,165,0,0.12);
+        color: orange;
+        padding:6px 12px;
+        font-size:11px;
+        border-radius:999px;
+        font-weight:800;
+        letter-spacing:0.6px;
+        border:1px solid rgba(255,165,0,0.4);
+        display:flex;
+        align-items:center;
+        gap:6px;
+      ">
+        <span style="
+          width:6px;
+          height:6px;
+          background:orange;
+          border-radius:50%;
+          display:inline-block;
+        "></span>
+        EM ANDAMENTO
+      </span>
+
+      <div style="display:flex; align-items:center; gap:14px;">
+
+        <img src="bsl.png" alt="BSL Logo" style="
+          width:64px;
+          height:64px;
+          border-radius:14px;
+          background:#fff;
+          padding:6px;
+          object-fit:contain;
+          box-shadow: 0 6px 14px rgba(0,0,0,0.25);
+        ">
+
+        <div style="display:flex; flex-direction:column; gap:6px;">
+
+          <strong style="
+            font-size:18px;
+            color:#fff;
+            letter-spacing:0.3px;
+          ">
+            BSL 3x3 Caçador
+          </strong>
+
+          <span style="
+            color:#b8b8b8;
+            font-size:13px;
+            line-height:1.4;
+            max-width:320px;
+          ">
+            Competição de basquete 3x3
+          </span>
+
+          <div style="
+            margin-top:6px;
+            display:flex;
+            align-items:center;
+            gap:8px;
+            color:orange;
+            font-weight:700;
+            font-size:13px;
+          ">
+            📅 26 Abril 2026
+            <span style="color:#666;">•</span>
+            <span style="color:#aaa; font-weight:500;">Local: SC - Caçador</span>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div id="fotos" class="section">
+  <div class="card">
+    <div class="gallery" id="gallery"></div>
+  </div>
+</div>
+
+<div id="redes" class="section">
+  <div class="card">
+
+    <div style="
+      padding:18px;
+      border-radius:18px;
+      background: linear-gradient(145deg, #1a1a1a, #0b0b0b);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.55);
+      position:relative;
+      overflow:hidden;
+    ">
+
+      <!-- glow -->
+      <div style="
+        position:absolute;
+        top:-70px;
+        right:-70px;
+        width:180px;
+        height:180px;
+        background: radial-gradient(circle, rgba(255,140,0,0.18), transparent 65%);
+        filter: blur(8px);
+      "></div>
+
+      <!-- título -->
+      <div style="
+        font-size:18px;
+        font-weight:900;
+        color:#fff;
+        margin-bottom:14px;
+        letter-spacing:0.5px;
+      ">
+        🌐 Redes oficiais
+      </div>
+
+      <!-- descrição -->
+      <div style="
+        font-size:12px;
+        color:#9a9a9a;
+        margin-bottom:16px;
+        line-height:1.4;
+      ">
+        Acesse os canais oficiais da Liga BSX para novidades, jogos e contato direto.
+      </div>
+
+      <!-- botões -->
+      <div style="
+        display:flex;
+        flex-direction:column;
+        gap:10px;
+      ">
+
+        <!-- Instagram -->
+        <div onclick="openInsta()" style="
+          display:flex;
+          align-items:center;
+          justify-content:space-between;
+          padding:12px 14px;
+          border-radius:14px;
+          background: rgba(255,255,255,0.04);
+          border:1px solid rgba(255,255,255,0.06);
+          cursor:pointer;
+          transition: transform 0.15s ease;
+        ">
+
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div style="
+              width:34px;
+              height:34px;
+              border-radius:10px;
+              background: radial-gradient(circle at 30% 30%, #ffcc70, #c13584, #5851db);
+              box-shadow: 0 6px 14px rgba(0,0,0,0.35);
+            "></div>
+
+            <div>
+              <div style="color:#fff; font-weight:800; font-size:13px;">
+                Instagram
+              </div>
+              <div style="color:#8a8a8a; font-size:11px;">
+                Veja fotos e atualizações
+              </div>
+            </div>
+          </div>
+
+          <div style="color:#666;">›</div>
+
+        </div>
+
+        <!-- WhatsApp -->
+        <div onclick="openZap()" style="
+          display:flex;
+          align-items:center;
+          justify-content:space-between;
+          padding:12px 14px;
+          border-radius:14px;
+          background: rgba(255,255,255,0.04);
+          border:1px solid rgba(255,255,255,0.06);
+          cursor:pointer;
+        ">
+
+          <div style="display:flex; align-items:center; gap:10px;">
+            <div style="
+              width:34px;
+              height:34px;
+              border-radius:10px;
+              background:#25D366;
+              box-shadow: 0 6px 14px rgba(0,0,0,0.35);
+            "></div>
+
+            <div>
+              <div style="color:#fff; font-weight:800; font-size:13px;">
+                WhatsApp
+              </div>
+              <div style="color:#8a8a8a; font-size:11px;">
+                Faça parte do nosso grupo de rachas
+              </div>
+            </div>
+          </div>
+
+          <div style="color:#666;">›</div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- SEÇÃO RANKING -->
+<div id="ranking" class="section">
+  <div class="card">
+
+    <h2 style="margin-bottom:15px; color:var(--primary); text-align:center;">
+      🏆 Ranking de Times BSX
+    </h2>
+
+    <!-- 1º LUGAR -->
+    <div class="card" style="border-left: 5px solid gold;">
+      <div class="team" style="align-items:center; display:flex; gap:10px;">
+        <img src="logo.png" width="55" alt="BSX Logo">
+        <div>
+          <strong style="font-size:18px;">🥇 1º Lugar - BSX</strong><br>
+          <span style="color:gray;">Time oficial da liga</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2º LUGAR -->
+    <div class="card" style="border-left: 5px solid silver;">
+      <div class="team">
+        <div>
+          <strong>🥈 2º Lugar</strong><br>
+          <span style="color:gray;">Vaga disponível para time</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3º LUGAR -->
+    <div class="card" style="border-left: 5px solid #cd7f32;">
+      <div class="team">
+        <div>
+          <strong>🥉 3º Lugar</strong><br>
+          <span style="color:gray;">Vaga disponível para time</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4º LUGAR -->
+    <div class="card" style="opacity:0.85;">
+      <div class="team">
+        <div>
+          <strong>4º Lugar</strong><br>
+          <span style="color:gray;">Vaga disponível para time</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODAL -->
+<div id="modal" onclick="closeModal()">
+  <img id="modalImg">
+</div>
+
+<!-- MUSIC PLAYER MODERNO -->
+<div id="musicPlayer" class="minimized">
+
+  <div id="playerHeader" onclick="togglePlayer()">
+    🎧 Player
+    <span id="toggleIcon">X</span>
+  </div>
+
+  <div id="playerContent">
+
+    <audio id="audio"></audio>
+
+    <button onclick="toggleMusic()" class="playBtn">
+      ▶ Play / Pause
+    </button>
+
+    <select onchange="changeMusic(this.value)">
+      <option value="musica1.mp3">🎵 Música 1</option>
+      <option value="musica2.mp3">🎵 Música 2</option>
+      <option value="musica3.mp3">🎵 Música 3</option>
+      <option value="musica4.mp3">🎵 Música 4</option>
+      <option value="musica5.mp3">🎵 Música 5</option>
+      <option value="musica6.mp3">🎵 Música 6</option>
+      <option value="musica7.mp3">🎵 Música 7</option>
+      <option value="musica8.mp3">🎵 Música 8</option>
+      <option value="musica9.mp3">🎵 Música 9</option>
+      <option value="musica10.mp3">🎵 Música 10</option>
+    </select>
+
+  </div>
+</div>
+
+<script>
+
+const audio=document.getElementById("audio");
+
+/* LOADING */
+window.onload=()=>{
+  setTimeout(()=>{
+    document.getElementById("loading").style.display="none";
+  },1000);
+
+  audio.src="musica1.mp3";
+};
+
+/* SECTIONS */
+function showSection(id){
+  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+}
+
+/* GALLERY */
+function addImage(src){
+  const img=document.createElement("img");
+  img.src=src;
+  img.onclick=()=>{
+    modal.style.display="flex";
+    modalImg.src=src;
+  };
+  document.getElementById("gallery").appendChild(img);
+}
+
+addImage("logo.png");
+addImage("logo2.png");
+addImage("bsl.png")
+
+/* MODAL */
+function closeModal(){
+  modal.style.display="none";
+}
+
+/* MUSIC */
+function toggleMusic(){
+  if(audio.paused) audio.play();
+  else audio.pause();
+}
+
+function togglePlayer(){
+  const player = document.getElementById("musicPlayer");
+  const icon = document.getElementById("toggleIcon");
+
+  player.classList.toggle("minimized");
+
+  icon.innerText = player.classList.contains("minimized") ? "X" : "X";
+}
+
+function changeMusic(src){
+  audio.src=src;
+  audio.play();
+}
+
+/* SOCIAL */
+function openInsta(){window.open("https://instagram.com/conta.bsx/","_blank")}
+function openZap(){window.open("https://chat.whatsapp.com/ItE2VtOWXLeDyo9k7w4knw","_blank")}
+
+</script>
+
+</body>
+</html>

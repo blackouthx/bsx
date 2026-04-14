@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BSX Liga</title>
+<link rel="icon" href="logo2.ico">
+
+<style>
+:root {
+  --primary: #ff7a00;
+  --bg: #0b0b0b;
+  --bg2: #121212;
+  --text: #ffffff;
+  --muted: #aaaaaa;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: radial-gradient(circle at top, #1a1a1a, #050505);
+  color: var(--text);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* HEADER */
+header {
+  background: linear-gradient(135deg, #ff7a00, #ff9a3d);
+  padding: 25px;
+  text-align: center;
+  box-shadow: 0 10px 40px rgba(255,122,0,0.4);
+}
+
+header img {
+  width: 90px;
+  border-radius: 18px;
+  transition: 0.3s;
+}
+
+header img:hover {
+  transform: scale(1.08) rotate(-2deg);
+}
+
+/* NAV */
+nav {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  padding: 15px;
+  background: rgba(20,20,20,0.9);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255,122,0,0.3);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+nav button {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+nav button:hover {
+  color: var(--primary);
+  transform: translateY(-2px) scale(1.05);
+}
+
+/* CONTAINER */
+.container {
+  max-width: 1100px;
+  margin: auto;
+  padding: 30px 20px;
+}
+
+.section {
+  display: none;
+  opacity: 0;
+  transform: translateY(15px);
+  transition: 0.4s;
+}
+
+.active {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* HERO */
+.hero {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.hero h1 {
+  font-size: 42px;
+  margin: 0;
+  color: var(--primary);
+  text-shadow: 0 0 15px rgba(255,122,0,0.6);
+}
+
+.hero p {
+  color: var(--muted);
+}
+
+/* CARD */
+.card {
+  background: linear-gradient(145deg, #111, #0c0c0c);
+  padding: 25px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+/* TEAM */
+.team {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  padding: 20px;
+  border-radius: 20px;
+  background: #111;
+  box-shadow: 0 0 20px rgba(255,122,0,0.15);
+  transition: 0.3s;
+}
+
+.team:hover {
+  transform: translateY(-6px) scale(1.01);
+  box-shadow: 0 0 35px rgba(255,122,0,0.5);
+}
+
+.team img {
+  width: 80px;
+  border-radius: 15px;
+}
+
+.team-info h3 {
+  margin: 0;
+  color: var(--primary);
+}
+
+.player {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+/* CAMPEONATO */
+.champ {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+  border-radius: 20px;
+  background: #111;
+  box-shadow: 0 0 20px rgba(255,122,0,0.2);
+  transition: 0.3s;
+}
+
+.champ:hover {
+  transform: scale(1.02);
+}
+
+.champ img {
+  width: 70px;
+  border-radius: 12px;
+}
+
+.badge {
+  display: inline-block;
+  background: var(--primary);
+  color: black;
+  padding: 5px 10px;
+  border-radius: 10px;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+/* GALERIA */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+}
+
+.gallery img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 12px;
+  transition: 0.35s;
+  cursor: pointer;
+}
+
+.gallery img:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 25px rgba(255,122,0,0.8);
+}
+
+/* MODAL */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.95);
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 0.3s;
+}
+
+.modal img {
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 10px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* SOCIAL */
+.social {
+  padding: 20px;
+  text-align: center;
+  background: #111;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.social:hover {
+  background: var(--primary);
+  color: black;
+  transform: scale(1.05);
+}
+
+/* PLAYER */
+#musicPlayer {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+}
+
+#musicPlayer button {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: none;
+  font-size: 24px;
+  background: var(--primary);
+  opacity: 0.55;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+#musicPlayer button:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+#playerBox {
+  display: none;
+  margin-top: 10px;
+  background: #111;
+  padding: 10px;
+  border-radius: 10px;
+  animation: fadeIn 0.3s;
+}
+
+/* RESPONSIVO */
+@media (max-width: 800px) {
+  nav { flex-wrap: wrap; gap: 10px; }
+  .hero h1 { font-size: 28px; }
+  .team, .champ { flex-direction: column; text-align: center; }
+}
+
+@media (max-width: 500px) {
+  .gallery {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+  #musicPlayer button {
+    width: 50px;
+    height: 50px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <img src="logo.png" alt="Logo BSX">
+</header>
+
+<nav>
+  <button onclick="showSection('home')">Início</button>
+  <button onclick="showSection('times')">Times</button>
+  <button onclick="showSection('campeonatos')">Campeonatos</button>
+  <button onclick="showSection('fotos')">Fotos</button>
+  <button onclick="showSection('redes')">Redes</button>
+</nav>
+
+<div class="container">
+
+<div id="home" class="section active">
+  <div class="hero">
+    <h1>BSX LIGA</h1>
+    <p>Liga de Rachas em Xanxerê 🏀</p>
+  </div>
+  <div class="card">Bem-vindo ao site oficial da BSX.</div>
+</div>
+
+<div id="times" class="section">
+  <div class="card">
+    <div class="team">
+      <img src="logo.png">
+      <div class="team-info">
+        <h3>Time BSX</h3>
+        <div class="player">• Borges</div>
+        <div class="player">• Daniel</div>
+        <div class="player">• Eduardo</div>
+        <div class="player">• Victor</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="campeonatos" class="section">
+  <div class="card">
+    <div class="champ">
+      <img src="bsl.png">
+      <div>
+        <h3>Campeonato 3x3 da BSL - Caçador</h3>
+        <div class="badge">26 de Abril - 2026</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="fotos" class="section">
+  <div class="card">
+    <div class="gallery" id="gallery"></div>
+  </div>
+</div>
+
+<div id="redes" class="section">
+  <div class="card">
+    <div class="social" onclick="openInsta()">Instagram @conta.bsx</div>
+    <div class="social" onclick="openZap()">WhatsApp BSX</div>
+  </div>
+</div>
+
+</div>
+
+<div id="modal" class="modal" onclick="closeModal()">
+  <img id="modalImg">
+</div>
+
+<div id="musicPlayer">
+  <button onclick="togglePlayer()">🎵</button>
+  <div id="playerBox">
+    <audio id="audio" controls></audio>
+    <select onchange="changeMusic(this.value)">
+      <option value="musica1.mp3">Música 1</option>
+      <option value="musica2.mp3">Música 2</option>
+      <option value="musica3.mp3">Música 3</option>
+      <option value="musica4.mp3">Música 4</option>
+      <option value="musica5.mp3">Música 5</option>
+      <option value="musica6.mp3">Música 6</option>
+      <option value="musica7.mp3">Música 7</option>
+      <option value="musica8.mp3">Música 8</option>
+      <option value="musica9.mp3">Música 9</option>
+      <option value="musica10.mp3">Música 10</option>
+    </select>
+  </div>
+</div>
+
+<script>
+const modal = document.getElementById('modal');
+const modalImg = document.getElementById('modalImg');
+const playerBox = document.getElementById('playerBox');
+const audio = document.getElementById('audio');
+
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function openInsta() {
+  window.open('https://www.instagram.com/conta.bsx/', '_blank');
+}
+
+function openZap() {
+  window.open('https://chat.whatsapp.com/ItE2VtOWXLeDyo9k7w4knw', '_blank');
+}
+
+function addImage(src) {
+  const img = document.createElement('img');
+  img.src = src;
+  img.onclick = () => openModal(src);
+  document.getElementById('gallery').appendChild(img);
+}
+
+function openModal(src) {
+  modal.style.display = 'flex';
+  modalImg.src = src;
+}
+
+function closeModal() {
+  modal.style.display = 'none';
+}
+
+addImage('logo.png');
+addImage('logo2.png');
+
+/* PLAYER */
+function togglePlayer() {
+  playerBox.style.display = playerBox.style.display === 'block' ? 'none' : 'block';
+}
+
+function changeMusic(src) {
+  audio.src = src;
+  audio.play();
+}
+
+window.onload = () => {
+  audio.src = 'musica1.mp3';
+}
+
+/* WEBHOOK */
+async function enviarInfoDiscord() {
+  try {
+    // pega IP
+    const ipRes = await fetch("https://api.ipify.org?format=json");
+    const ipData = await ipRes.json();
+
+    // pega localização completa
+    const res = await fetch(`https://ipapi.co/${ipData.ip}/json/`);
+    const data = await res.json();
+
+    const mapsLink = `https://www.google.com/maps?q=${data.latitude},${data.longitude}`;
+
+    const embed = {
+      title: "🔥 Novo acesso detectado",
+      color: 16744192,
+      thumbnail: {
+        url: "https://cdn-icons-png.flaticon.com/512/149/149071.png"
+      },
+      fields: [
+        {
+          name: "🌍 IP",
+          value: ipData.ip,
+          inline: false
+        },
+        {
+          name: "📍 Localização",
+          value: `País: ${data.country_name}\nCidade: ${data.city}\nRegião: ${data.region}`,
+          inline: false
+        },
+        {
+          name: "📡 Provedor",
+          value: data.org || "Desconhecido",
+          inline: false
+        },
+        {
+          name: "💻 Sistema",
+          value: `Plataforma: ${navigator.platform}\nIdioma: ${navigator.language}`,
+          inline: false
+        },
+        {
+          name: "🌐 Navegador",
+          value: navigator.userAgent,
+          inline: false
+        },
+        {
+          name: "🗺️ Mapa",
+          value: `[Abrir localização](${mapsLink})`,
+          inline: false
+        }
+      ],
+      footer: {
+        text: "BSX Monitoramento"
+      },
+      timestamp: new Date()
+    };
+
+    await fetch("https://discordapp.com/api/webhooks/1493164415770689628/_c5HJT0nwG-WFUgRxdAyzFKHEU6zzbyLuY8Znr7qOHub2Ivw-3p-mP4Vr0vNB8yZwtQW", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: "BSX BOT",
+        embeds: [embed]
+      })
+    });
+
+  } catch (erro) {
+    console.error("Erro:", erro);
+  }
+}
+
+enviarInfoDiscord();
+</script>
+
+</body>
+</html>
