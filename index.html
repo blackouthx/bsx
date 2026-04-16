@@ -688,7 +688,7 @@ nav button:hover::after{
 }
 
 #musicPlayer.minimized{
-  width:200px;
+  width:130px;
 }
 
 /* ===== MAP STYLES PREMIUM ===== */
@@ -1337,7 +1337,7 @@ nav button:hover::after{
   <button onclick="showSection('home')">Início</button>
   <button onclick="showSection('times')">Times</button>
   <button onclick="showSection('campeonatos')">Campeonatos</button>
-  <button onclick="showSection('fotos')">Fotos</button>
+  <button onclick="showSection('galeria')">Galeria</button>
   <button onclick="showSection('redes')">Redes</button>
   <button onclick="showSection('ranking')">Ranking</button>
   <button onclick="showSection('mapa')">Mapa</button>
@@ -1785,8 +1785,8 @@ nav button:hover::after{
   </div>
 </div>
 
-<!-- FOTOS -->
-<div id="fotos" class="section">
+<!-- GALERIA -->
+<div id="galeria" class="section">
   <div class="card">
     <div class="gallery" id="gallery"></div>
   </div>
@@ -1960,7 +1960,7 @@ nav button:hover::after{
 <div id="mapa" class="section">
   <div class="card">
     <div class="map-title-section">
-      <h2>📍 Quadras Disponíveis</h2>
+      <h2>Quadras Disponíveis</h2>
       <p>Encontre e reserve sua quadra de basquete em Santa Catarina</p>
     </div>
     
@@ -2011,6 +2011,13 @@ nav button:hover::after{
               </div>
             </div>
             <div class="detail-row-premium">
+              <div class="detail-icon-premium">✅</div>
+              <div class="detail-text-premium">
+                <div class="detail-text-label-premium">Nota</div>
+                <div class="detail-text-value-premium">6/10</div>
+              </div>
+            </div>
+            <div class="detail-row-premium">
               <div class="detail-icon-premium">👥</div>
               <div class="detail-text-premium">
                 <div class="detail-text-label-premium">Tipo</div>
@@ -2021,7 +2028,7 @@ nav button:hover::after{
 
           <div class="court-actions-premium">
             <button class="action-btn-premium" onclick="window.open('https://maps.google.com/?q=EcoPark+Xanxerê', '_blank')">📍 No Mapa</button>
-            <button class="action-btn-premium" onclick="openZap()">💬 Contato</button>
+            <button class="action-btn-premium" onclick="openContato()">💬 Contato</button>
           </div>
         </div>
 
@@ -2040,7 +2047,7 @@ nav button:hover::after{
           As quadras reservadas serão adicionadas em breve!<br>
           Entre em contato conosco para contratar um espaço exclusivo para sua equipe.
         </div>
-        <button class="empty-btn-premium" onclick="openZap()">📞 Fale Conosco</button>
+        <button class="empty-btn-premium" onclick="openContato()">📞 Fale Conosco</button>
       </div>
     </div>
 
@@ -2267,6 +2274,10 @@ function openInsta() {
 
 function openZap() {
   window.open('https://chat.whatsapp.com/ItE2VtOWXLeDyo9k7w4knw', '_blank');
+}
+
+function openContato() {
+  window.open('https://wa.me/5549989018917', '_blank');
 }
 
 function ativarAntiInspecionar() {
