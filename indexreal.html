@@ -1,0 +1,2389 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BSX</title>
+<link rel="icon" href="logo2.ico">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --primary:#ff7a00;
+  --primary2:#ff3c00;
+  --bg:#050505;
+  --glass:rgba(255,255,255,0.06);
+  --glass2:rgba(255,255,255,0.03);
+  --text:#ffffff;
+  --muted:#b8b8b8;
+  --blur:blur(20px);
+  --dark-card:#0f0f0f;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+html{scroll-behavior:smooth}
+
+body{
+  font-family:Inter,sans-serif;
+  background:fixed radial-gradient(circle at top,#1a1a1a,#050505 60%);
+  color:var(--text);
+  overflow-x:hidden;
+  position:relative;
+}
+
+/* ===== FUNDO ANIMADO ===== */
+body::before{
+  content:"";
+  position:fixed;
+  inset:-200px;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(255,122,0,0.15), transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(255,60,0,0.12), transparent 40%);
+  animation:moveBgPremium 12s infinite alternate cubic-bezier(0.4, 0.0, 0.2, 1);
+  z-index:-1;
+}
+
+@keyframes moveBgPremium{
+  0%{transform:translate(0,0) scale(0.95)}
+  50%{transform:translate(-50px,40px) scale(1.05)}
+  100%{transform:translate(-100px,80px) scale(0.95)}
+}
+
+/* ===== CANVAS PARTÍCULAS ===== */
+#particleCanvas{
+  position:fixed;
+  top:0;
+  left:0;
+  z-index:0;
+  pointer-events:none;
+}
+
+/* ===== LOADING PREMIUM SUPREMO ===== */
+#loading{
+  position:fixed;
+  inset:0;
+  background:radial-gradient(circle at center, #0a0a0a, #000000);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+  overflow:hidden;
+}
+
+#loading::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(255,122,0,0.25), transparent 35%),
+    radial-gradient(circle at 80% 70%, rgba(255,60,0,0.2), transparent 40%);
+  animation:loadingPulseSupreme 3.5s ease-in-out infinite;
+}
+
+@keyframes loadingPulseSupreme{
+  0%, 100%{opacity:0.5;transform:scale(1)}
+  50%{opacity:1;transform:scale(1.15)}
+}
+
+#loading::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(180deg, transparent, rgba(255,122,0,0.1), transparent);
+  animation:loadingGradient 4s ease-in-out infinite;
+  pointer-events:none;
+}
+
+@keyframes loadingGradient{
+  0%{transform:translateY(-100%)}
+  100%{transform:translateY(100%)}
+}
+
+.loader-premium{
+  width:140px;
+  height:140px;
+  position:relative;
+  z-index:2;
+  filter:drop-shadow(0 0 60px rgba(255,122,0,0.5));
+}
+
+.loader-ring{
+  position:absolute;
+  inset:0;
+  border-radius:50%;
+  border:5px solid transparent;
+  border-top:5px solid var(--primary);
+  border-right:5px solid var(--primary2);
+  animation:rotateLoaderSupreme 2.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+  box-shadow:
+    0 0 40px rgba(255,122,0,0.6),
+    inset 0 0 40px rgba(255,122,0,0.2);
+}
+
+.loader-ring:nth-child(2){
+  inset:25px;
+  border-top:4px solid var(--primary2);
+  border-right:4px solid transparent;
+  border-left:4px solid rgba(255,122,0,0.3);
+  animation:rotateLoaderSupreme 3.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite reverse;
+  box-shadow:
+    0 0 35px rgba(255,60,0,0.5),
+    inset 0 0 30px rgba(255,60,0,0.15);
+}
+
+.loader-ring:nth-child(3){
+  inset:50px;
+  border-top:3px solid var(--primary);
+  border-left:3px solid var(--primary2);
+  animation:rotateLoaderSupreme 2s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+  box-shadow:
+    0 0 30px rgba(255,122,0,0.4),
+    inset 0 0 20px rgba(255,122,0,0.1);
+}
+
+@keyframes rotateLoaderSupreme{
+  to{transform:rotate(360deg)}
+}
+
+.loading-content{
+  position:relative;
+  z-index:2;
+  text-align:center;
+  margin-top:60px;
+}
+
+.loading-content p{
+  font-size:48px;
+  color:#fff;
+  letter-spacing:8px;
+  font-weight:900;
+  margin-bottom:16px;
+  animation:fadeInOutText 2.5s ease-in-out infinite;
+  text-shadow:0 0 30px rgba(255,122,0,0.5);
+}
+
+@keyframes fadeInOutText{
+  0%, 100%{
+    opacity:0.6;
+    text-shadow:0 0 20px rgba(255,122,0,0.3);
+    letter-spacing:8px;
+  }
+  50%{
+    opacity:1;
+    text-shadow:0 0 40px rgba(255,122,0,0.7);
+    letter-spacing:12px;
+  }
+}
+
+.loading-sub{
+  font-size:13px;
+  color:#888;
+  letter-spacing:2px;
+  font-weight:600;
+  margin-bottom:30px;
+  animation:slideInText 1s ease-out forwards;
+  animation-delay:0.3s;
+}
+
+@keyframes slideInText{
+  from{
+    opacity:0;
+    transform:translateY(20px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+.progress-line{
+  width:200px;
+  height:4px;
+  border-radius:999px;
+  background:rgba(255,122,0,0.15);
+  overflow:hidden;
+  position:relative;
+  box-shadow:
+    0 0 20px rgba(255,122,0,0.3),
+    inset 0 0 10px rgba(255,122,0,0.1);
+}
+
+.progress-line::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(90deg, transparent, var(--primary), var(--primary2), var(--primary), transparent);
+  border-radius:999px;
+  animation:progressMoveSupreme 2.5s ease-in-out infinite;
+  box-shadow:0 0 25px rgba(255,122,0,0.7);
+}
+
+@keyframes progressMoveSupreme{
+  0%{width:0;left:0}
+  50%{width:100%}
+  100%{width:100%;left:100%}
+}
+
+/* ===== HEADER CHAMPIONSHIP ===== */
+header::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,0.35);
+  z-index:0;
+}
+
+header *{
+  position:relative;
+  z-index:1;
+}
+
+header::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+  animation:shimmerHeader 4s ease-in-out infinite;
+  pointer-events:none;
+}
+
+@keyframes shimmerHeader{
+  0%{opacity:0}
+  50%{opacity:1}
+  100%{opacity:0}
+}
+
+header::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:radial-gradient(circle at 50% 0%, rgba(255,255,255,0.1), transparent 70%);
+  pointer-events:none;
+}
+
+header img{
+  width:100px;
+  border-radius:20px;
+  transition:.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  filter:drop-shadow(0 0 15px rgba(0,0,0,0.4));
+  position:relative;
+  z-index:1;
+  border:3px solid rgba(255,255,255,0.2);
+}
+
+header img:hover{
+  transform:scale(1.12) rotate(3deg) translateY(-5px);
+  filter:drop-shadow(0 12px 40px rgba(255,122,0,0.5));
+  border-color:rgba(255,255,255,0.4);
+}
+
+/* ===== NAV ELEGANT ===== */
+nav{
+  display:flex;
+  justify-content:center;
+  gap:8px;
+  padding:16px 28px;
+  position:sticky;
+  top:0;
+  z-index:100;
+  background:linear-gradient(180deg, rgba(10,10,10,0.95), rgba(10,10,10,0.85));
+  backdrop-filter:var(--blur);
+  border-bottom:1px solid rgba(255,122,0,0.2);
+  flex-wrap:wrap;
+  box-shadow:0 8px 32px rgba(0,0,0,0.5);
+}
+
+nav button{
+  background:rgba(255,122,0,0.05);
+  border:1.5px solid rgba(255,122,0,0.2);
+  color:#d0d0d0;
+  padding:11px 20px;
+  border-radius:12px;
+  font-size:13px;
+  cursor:pointer;
+  transition:.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position:relative;
+  overflow:hidden;
+  font-weight:600;
+  letter-spacing:0.5px;
+}
+
+nav button::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(135deg, var(--primary), var(--primary2));
+  opacity:0;
+  transition:.4s;
+  border-radius:12px;
+  z-index:-1;
+}
+
+nav button::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  opacity:0;
+  border-radius:12px;
+  animation:navShimmer 2s infinite;
+}
+
+nav button:hover{
+  color:#fff;
+  transform:translateY(-3px);
+  box-shadow:0 12px 35px rgba(255,122,0,0.35);
+  border-color:rgba(255,122,0,0.5);
+  background:rgba(255,122,0,0.12);
+}
+
+nav button:hover::after{
+  opacity:1;
+}
+
+@keyframes navShimmer{
+  0%{transform:translateX(-100%)}
+  100%{transform:translateX(100%)}
+}
+
+/* ===== CONTAINER ===== */
+.container{
+  max-width:1200px;
+  margin:auto;
+  padding:40px 28px;
+}
+
+/* ===== SECTIONS ===== */
+.section{
+  display:none;
+  opacity:0;
+  transform:translateY(25px) rotateX(8deg);
+  transition:.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+  perspective:1000px;
+}
+
+.active{
+  display:block;
+  opacity:1;
+  transform:translateY(0) rotateX(0);
+}
+
+/* ===== HERO CHAMPIONSHIP ===== */
+.hero{
+  text-align:center;
+  margin:40px 0;
+}
+
+.hero h1{
+  font-size:68px;
+  background:linear-gradient(90deg,var(--primary),#fff);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  letter-spacing:3px;
+  font-weight:900;
+  animation:heroShine 3s ease-in-out infinite;
+  margin-bottom:8px;
+}
+
+@keyframes heroShine{
+  0%, 100%{
+    filter:drop-shadow(0 0 10px rgba(255,122,0,0.3));
+    opacity:1;
+  }
+  50%{
+    filter:drop-shadow(0 0 30px rgba(255,122,0,0.6));
+    opacity:0.95;
+  }
+}
+
+.hero p{
+  color:var(--muted);
+  font-size:16px;
+  margin-top:12px;
+  letter-spacing:0.8px;
+  font-weight:500;
+}
+
+/* ===== CARD PREMIUM ===== */
+.card{
+  background:linear-gradient(135deg, rgba(15,15,15,0.8), rgba(8,8,8,0.95));
+  backdrop-filter:var(--blur);
+  padding:28px;
+  border-radius:24px;
+  margin-bottom:20px;
+  border:1.5px solid rgba(255,122,0,0.12);
+  transition:.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow:
+    0 15px 45px rgba(0,0,0,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+  position:relative;
+  overflow:hidden;
+  will-change:transform;
+}
+
+.card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(135deg, transparent, rgba(255,255,255,0.04), transparent);
+  opacity:0;
+  transition:.4s;
+  border-radius:24px;
+}
+
+.card::after{
+  content:"";
+  position:absolute;
+  inset:-1px;
+  background:linear-gradient(45deg,
+    rgba(255,122,0,0.15) 0%,
+    transparent 25%,
+    transparent 75%,
+    rgba(255,60,0,0.15) 100%);
+  border-radius:24px;
+  opacity:0;
+  transition:.4s;
+  pointer-events:none;
+  box-shadow:inset 0 0 30px rgba(255,122,0,0.08);
+}
+
+.card:hover{
+  transform:translateY(-10px) rotateX(6deg);
+  border:1.5px solid rgba(255,122,0,0.35);
+  box-shadow:
+    0 25px 70px rgba(255,122,0,0.2),
+    inset 0 1px 0 rgba(255,255,255,0.1);
+}
+
+.card:hover::before{
+  opacity:1;
+}
+
+.card:hover::after{
+  opacity:1;
+}
+
+/* ===== GALLERY SHOWCASE ===== */
+.gallery{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+  gap:16px;
+  margin-bottom:0;
+}
+
+.gallery img{
+  width:100%;
+  height:160px;
+  object-fit:cover;
+  border-radius:16px;
+  cursor:pointer;
+  transition:.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow:
+    0 12px 35px rgba(0,0,0,0.35),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+  border:1.5px solid rgba(255,122,0,0.12);
+  position:relative;
+  filter:brightness(1) contrast(1.05);
+}
+
+.gallery img::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(135deg, rgba(255,122,0,0.25), transparent);
+  opacity:0;
+  transition:.4s;
+  border-radius:15px;
+}
+
+.gallery img:hover{
+  transform:scale(1.1) rotateY(6deg) rotateX(-3deg);
+  box-shadow:
+    0 20px 60px rgba(255,122,0,0.3),
+    inset 0 0 30px rgba(255,122,0,0.12);
+  filter:brightness(1.1) contrast(1.15);
+  border-color:rgba(255,122,0,0.3);
+}
+
+.gallery img:hover::before{
+  opacity:1;
+}
+
+/* ===== MODAL ===== */
+#modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.95);
+  justify-content:center;
+  align-items:center;
+  z-index:998;
+  padding:20px;
+  backdrop-filter:blur(10px);
+  animation:fadeInModal .4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes fadeInModal{
+  from{opacity:0;background:rgba(0,0,0,0.5)}
+  to{opacity:1;background:rgba(0,0,0,0.95)}
+}
+
+#modal img{
+  max-width:90%;
+  max-height:90vh;
+  border-radius:20px;
+  border:2px solid rgba(255,122,0,0.3);
+  box-shadow:
+    0 0 80px rgba(255,122,0,0.4),
+    0 20px 80px rgba(0,0,0,0.8);
+  animation:zoomInModal .5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes zoomInModal{
+  from{
+    transform:scale(0.75) rotateZ(-5deg);
+    opacity:0;
+    filter:blur(10px);
+  }
+  to{
+    transform:scale(1) rotateZ(0);
+    opacity:1;
+    filter:blur(0);
+  }
+}
+
+/* ===== MUSIC PLAYER ===== */
+#musicPlayer{
+  position:fixed;
+  bottom:22px;
+  right:22px;
+  width:280px;
+  border-radius:20px;
+  background:linear-gradient(135deg, rgba(15,15,15,0.9), rgba(8,8,8,0.95));
+  backdrop-filter:blur(25px);
+  border:1.5px solid rgba(255,122,0,0.25);
+  box-shadow:
+    0 15px 55px rgba(0,0,0,0.6),
+    inset 0 1px 0 rgba(255,122,0,0.15);
+  overflow:hidden;
+  transition:.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  will-change:transform;
+}
+
+#musicPlayer::before{
+  content:"";
+  position:absolute;
+  inset:-1px;
+  background:linear-gradient(135deg, rgba(255,122,0,0.3), rgba(255,60,0,0.2));
+  opacity:0;
+  transition:.5s;
+  border-radius:20px;
+  z-index:-1;
+  pointer-events:none;
+}
+
+#musicPlayer:hover::before{
+  opacity:0.3;
+}
+
+#playerHeader{
+  padding:13px;
+  font-weight:700;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  cursor:pointer;
+  background:linear-gradient(135deg,var(--primary),var(--primary2));
+  color:#fff;
+  font-size:13px;
+  user-select:none;
+  box-shadow:0 6px 20px rgba(255,122,0,0.25);
+  position:relative;
+  letter-spacing:0.8px;
+}
+
+#playerHeader::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  animation:playerShimmer 3s ease-in-out infinite;
+  pointer-events:none;
+}
+
+@keyframes playerShimmer{
+  0%{transform:translateX(-100%)}
+  50%{transform:translateX(100%)}
+  100%{transform:translateX(100%)}
+}
+
+#playerContent{
+  padding:14px;
+  display:flex;
+  flex-direction:column;
+  gap:11px;
+  transition:.4s;
+}
+
+.playBtn{
+  padding:12px;
+  border:1px solid rgba(255,122,0,0.3);
+  border-radius:12px;
+  background:linear-gradient(135deg,var(--primary),var(--primary2));
+  color:#fff;
+  font-weight:700;
+  cursor:pointer;
+  transition:.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  font-size:12px;
+  box-shadow:
+    0 8px 25px rgba(255,122,0,0.3),
+    inset 0 1px 0 rgba(255,255,255,0.15);
+  position:relative;
+  overflow:hidden;
+  letter-spacing:0.5px;
+}
+
+.playBtn::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transform:translateX(-100%);
+  transition:.6s;
+  border-radius:10px;
+}
+
+.playBtn:hover{
+  transform:scale(1.06) translateY(-2px);
+  box-shadow:
+    0 12px 35px rgba(255,122,0,0.5),
+    inset 0 0 20px rgba(255,255,255,0.08);
+}
+
+.playBtn:hover::before{
+  transform:translateX(100%);
+}
+
+#musicPlayer select{
+  padding:8px;
+  border-radius:10px;
+  border:1px solid rgba(255,122,0,0.25);
+  background:rgba(0,0,0,0.4);
+  color:#fff;
+  cursor:pointer;
+  font-size:11px;
+  font-weight:600;
+  transition:.3s;
+}
+
+#musicPlayer select:hover{
+  border-color:rgba(255,122,0,0.4);
+  background:rgba(0,0,0,0.6);
+  box-shadow:0 0 15px rgba(255,122,0,0.25);
+}
+
+#musicPlayer.minimized #playerContent{
+  display:none;
+}
+
+#musicPlayer.minimized{
+  width:130px;
+}
+
+/* ===== MAP STYLES PREMIUM ===== */
+.map-title-section{
+  text-align:center;
+  margin-bottom:32px;
+}
+
+.map-title-section h2{
+  font-size:32px;
+  font-weight:950;
+  background:linear-gradient(90deg, var(--primary), #fff);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  letter-spacing:1.2px;
+  margin-bottom:12px;
+  animation:titleGlow 3s ease-in-out infinite;
+}
+
+@keyframes titleGlow{
+  0%, 100%{filter:drop-shadow(0 0 10px rgba(255,122,0,0.2))}
+  50%{filter:drop-shadow(0 0 25px rgba(255,122,0,0.5))}
+}
+
+.map-title-section p{
+  color:#8a8a8a;
+  font-size:13px;
+  letter-spacing:0.8px;
+}
+
+.map-tabs-container{
+  display:flex;
+  gap:14px;
+  margin-bottom:36px;
+  justify-content:center;
+  flex-wrap:wrap;
+}
+
+.map-tab-btn{
+  padding:14px 32px;
+  border:2.5px solid rgba(255,122,0,0.3);
+  background:rgba(255,122,0,0.04);
+  color:#d0d0d0;
+  border-radius:16px;
+  cursor:pointer;
+  font-weight:850;
+  transition:.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  font-size:13px;
+  letter-spacing:0.7px;
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 8px 24px rgba(0,0,0,0.3);
+  text-transform:uppercase;
+}
+
+.map-tab-btn::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(135deg, var(--primary), var(--primary2));
+  opacity:0;
+  transition:.6s;
+  z-index:-1;
+}
+
+.map-tab-btn::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  opacity:0;
+  transition:.6s;
+  pointer-events:none;
+}
+
+.map-tab-btn.active{
+  background:linear-gradient(135deg, var(--primary), var(--primary2));
+  border-color:rgba(255,122,0,0.8);
+  color:#fff;
+  box-shadow:0 16px 50px rgba(255,122,0,0.5);
+  transform:translateY(-4px);
+}
+
+.map-tab-btn.active::after{
+  opacity:1;
+}
+
+.map-tab-btn:hover:not(.active){
+  border-color:rgba(255,122,0,0.6);
+  background:rgba(255,122,0,0.15);
+  transform:translateY(-2px);
+  box-shadow:0 12px 36px rgba(255,122,0,0.25);
+}
+
+.map-content{
+  display:none;
+  opacity:0;
+  animation:slideInMap .6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.map-content.active-map{
+  display:block;
+  opacity:1;
+}
+
+@keyframes slideInMap{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+.court-item-wrapper{
+  display:grid;
+  grid-template-columns:1fr 1.2fr;
+  gap:28px;
+  margin-bottom:32px;
+  align-items:stretch;
+}
+
+.court-info-premium{
+  background:linear-gradient(135deg, rgba(27,27,27,0.85), rgba(15,15,15,0.95));
+  border-left:8px solid var(--primary);
+  padding:28px;
+  border-radius:22px;
+  border:2px solid rgba(255,122,0,0.18);
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  box-shadow:
+    0 20px 60px rgba(0,0,0,0.5),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+  transition:.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position:relative;
+  overflow:hidden;
+}
+
+.court-info-premium::before{
+  content:"";
+  position:absolute;
+  top:-100px;
+  right:-100px;
+  width:350px;
+  height:350px;
+  background:radial-gradient(circle, rgba(255,122,0,0.2), transparent 65%);
+  filter:blur(35px);
+  animation:glowAnimateSupreme 8s ease-in-out infinite;
+  z-index:0;
+}
+
+@keyframes glowAnimateSupreme{
+  0%, 100%{opacity:0.3;transform:scale(0.9)}
+  50%{opacity:0.7;transform:scale(1.1)}
+}
+
+.court-info-premium::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(135deg, transparent, rgba(255,122,0,0.05), transparent);
+  opacity:0;
+  transition:.7s;
+  pointer-events:none;
+}
+
+.court-info-premium:hover{
+  transform:translateY(-8px);
+  border-color:rgba(255,122,0,0.45);
+  box-shadow:
+    0 30px 80px rgba(255,122,0,0.3),
+    inset 0 1px 0 rgba(255,255,255,0.12);
+}
+
+.court-info-premium:hover::after{
+  opacity:1;
+}
+
+.court-header-premium{
+  position:relative;
+  z-index:1;
+  margin-bottom:20px;
+}
+
+.court-name-premium{
+  font-size:26px;
+  font-weight:950;
+  color:#fff;
+  letter-spacing:1px;
+  margin-bottom:14px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.court-status-badge-premium{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 18px;
+  border-radius:14px;
+  font-size:12px;
+  font-weight:950;
+  letter-spacing:0.8px;
+  text-transform:uppercase;
+  border:2px solid;
+  transition:.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow:0 8px 24px rgba(0,0,0,0.3);
+  position:relative;
+  overflow:hidden;
+}
+
+.court-status-badge-premium::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  opacity:0;
+  animation:badgeShimmer 3s ease-in-out infinite;
+}
+
+@keyframes badgeShimmer{
+  0%{transform:translateX(-100%)}
+  50%{transform:translateX(100%)}
+  100%{transform:translateX(100%)}
+}
+
+.court-status-badge-premium.public{
+  background:linear-gradient(135deg, rgba(76,175,80,0.15), rgba(76,175,80,0.08));
+  border-color:rgba(76,175,80,0.5);
+  color:#4caf50;
+}
+
+.court-status-badge-premium.public span{
+  width:10px;
+  height:10px;
+  background:#4caf50;
+  border-radius:50%;
+  box-shadow:0 0 16px #4caf50;
+  animation:pulseGreen 2s ease-in-out infinite;
+}
+
+@keyframes pulseGreen{
+  0%, 100%{box-shadow:0 0 10px #4caf50}
+  50%{box-shadow:0 0 20px #4caf50, 0 0 30px rgba(76,175,80,0.5)}
+}
+
+.court-status-badge-premium.reserved{
+  background:linear-gradient(135deg, rgba(33,150,243,0.15), rgba(33,150,243,0.08));
+  border-color:rgba(33,150,243,0.5);
+  color:#2196f3;
+}
+
+.court-status-badge-premium.reserved span{
+  width:10px;
+  height:10px;
+  background:#2196f3;
+  border-radius:50%;
+  box-shadow:0 0 16px #2196f3;
+  animation:pulseBlue 2s ease-in-out infinite;
+}
+
+@keyframes pulseBlue{
+  0%, 100%{box-shadow:0 0 10px #2196f3}
+  50%{box-shadow:0 0 20px #2196f3, 0 0 30px rgba(33,150,243,0.5)}
+}
+
+.court-details-premium{
+  position:relative;
+  z-index:1;
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+  margin-bottom:24px;
+}
+
+.detail-row-premium{
+  display:flex;
+  align-items:center;
+  gap:16px;
+  padding:14px 16px;
+  border-radius:13px;
+  background:linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+  border:1.5px solid rgba(255,122,0,0.12);
+  transition:.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position:relative;
+  overflow:hidden;
+}
+
+.detail-row-premium::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(90deg, transparent, rgba(255,122,0,0.1), transparent);
+  opacity:0;
+  transition:.6s;
+}
+
+.detail-row-premium:hover{
+  background:linear-gradient(135deg, rgba(255,122,0,0.12), rgba(255,122,0,0.06));
+  border-color:rgba(255,122,0,0.3);
+  transform:translateX(4px);
+}
+
+.detail-row-premium:hover::before{
+  opacity:1;
+}
+
+.detail-icon-premium{
+  font-size:22px;
+  min-width:28px;
+}
+
+.detail-text-premium{
+  flex:1;
+}
+
+.detail-text-label-premium{
+  font-size:10px;
+  color:#666;
+  letter-spacing:0.5px;
+  text-transform:uppercase;
+  font-weight:850;
+  margin-bottom:6px;
+}
+
+.detail-text-value-premium{
+  font-size:14px;
+  color:#fff;
+  font-weight:750;
+  letter-spacing:0.5px;
+}
+
+.court-actions-premium{
+  position:relative;
+  z-index:1;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.action-btn-premium{
+  padding:14px;
+  border:2px solid rgba(255,122,0,0.35);
+  background:linear-gradient(135deg, rgba(255,122,0,0.12), rgba(255,60,0,0.08));
+  color:#fff;
+  border-radius:13px;
+  cursor:pointer;
+  font-weight:800;
+  font-size:12px;
+  letter-spacing:0.6px;
+  transition:.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow:0 8px 24px rgba(0,0,0,0.3);
+  position:relative;
+  overflow:hidden;
+  text-transform:uppercase;
+}
+
+.action-btn-premium::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(135deg, var(--primary), var(--primary2));
+  opacity:0;
+  transition:.6s;
+  z-index:-1;
+}
+
+.action-btn-premium::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  opacity:0;
+  transition:.6s;
+  pointer-events:none;
+}
+
+.action-btn-premium:hover{
+  border-color:rgba(255,122,0,0.7);
+  background:linear-gradient(135deg, rgba(255,122,0,0.25), rgba(255,60,0,0.15));
+  transform:translateY(-3px);
+  box-shadow:0 14px 40px rgba(255,122,0,0.35);
+}
+
+.action-btn-premium:hover::after{
+  opacity:1;
+}
+
+.map-frame-supreme{
+  width:100%;
+  border-radius:22px;
+  border:2.5px solid rgba(255,122,0,0.22);
+  overflow:hidden;
+  box-shadow:
+    0 25px 70px rgba(0,0,0,0.5),
+    inset 0 1px 0 rgba(255,122,0,0.1);
+  transition:.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position:relative;
+  background:rgba(10,10,10,0.5);
+}
+
+.map-frame-supreme::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(135deg, rgba(255,122,0,0.1), transparent);
+  opacity:0;
+  transition:.7s;
+  z-index:2;
+  pointer-events:none;
+}
+
+.map-frame-supreme:hover{
+  border-color:rgba(255,122,0,0.5);
+  box-shadow:
+    0 35px 100px rgba(255,122,0,0.35),
+    inset 0 1px 0 rgba(255,122,0,0.2);
+}
+
+.map-frame-supreme:hover::before{
+  opacity:0.5;
+}
+
+.map-frame-supreme iframe{
+  width:100%;
+  height:550px;
+  border:none;
+  display:block;
+  border-radius:20px;
+}
+
+.empty-state-premium{
+  text-align:center;
+  padding:80px 40px;
+  background:linear-gradient(135deg, rgba(33,150,243,0.1), rgba(21,101,192,0.05));
+  border-radius:22px;
+  border:3px dashed rgba(33,150,243,0.25);
+  position:relative;
+  overflow:hidden;
+}
+
+.empty-state-premium::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:radial-gradient(circle at center, rgba(33,150,243,0.15), transparent 70%);
+  filter:blur(40px);
+  animation:emptyPulse 4s ease-in-out infinite;
+}
+
+@keyframes emptyPulse{
+  0%, 100%{opacity:0.5}
+  50%{opacity:1}
+}
+
+.empty-state-premium > *{
+  position:relative;
+  z-index:1;
+}
+
+.empty-icon-premium{
+  font-size:64px;
+  margin-bottom:20px;
+  animation:bounceIcon 2s ease-in-out infinite;
+}
+
+@keyframes bounceIcon{
+  0%, 100%{transform:translateY(0)}
+  50%{transform:translateY(-15px)}
+}
+
+.empty-title-premium{
+  font-size:22px;
+  font-weight:900;
+  color:#fff;
+  margin-bottom:12px;
+  letter-spacing:0.8px;
+}
+
+.empty-text-premium{
+  font-size:13px;
+  color:#aaa;
+  letter-spacing:0.4px;
+  line-height:1.8;
+  margin-bottom:28px;
+}
+
+.empty-btn-premium{
+  display:inline-block;
+  padding:14px 32px;
+  background:linear-gradient(135deg, #2196f3, #1976d2);
+  border:2px solid #2196f3;
+  color:#fff;
+  border-radius:14px;
+  cursor:pointer;
+  font-weight:850;
+  font-size:12px;
+  letter-spacing:0.7px;
+  text-transform:uppercase;
+  transition:.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow:0 12px 36px rgba(33,150,243,0.3);
+}
+
+.empty-btn-premium:hover{
+  transform:translateY(-3px);
+  box-shadow:0 18px 50px rgba(33,150,243,0.5);
+}
+
+/* ===== RESPONSIVO ===== */
+@media(max-width:1200px){
+  .container{padding:32px 24px}
+  .hero h1{font-size:56px}
+  .gallery{grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:14px}
+  .gallery img{height:145px}
+  .map-frame-supreme iframe{height:500px}
+  .court-item-wrapper{grid-template-columns:1fr}
+}
+
+@media(max-width:1024px){
+  .container{padding:24px 20px}
+  .hero h1{font-size:48px;letter-spacing:2px}
+  header{padding:24px}
+  header img{width:90px}
+  nav{gap:6px;padding:14px 20px}
+  nav button{padding:9px 16px;font-size:12px}
+  .gallery{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px}
+  .gallery img{height:130px}
+  .card{padding:24px;margin-bottom:18px}
+  .map-frame-supreme iframe{height:450px}
+  .map-tab-btn{padding:12px 24px;font-size:12px}
+  .court-item-wrapper{grid-template-columns:1fr}
+}
+
+@media(max-width:768px){
+  .container{padding:20px 16px}
+  .hero h1{font-size:42px;letter-spacing:1.5px}
+  .hero p{font-size:15px}
+  header{padding:20px}
+  header img{width:80px}
+  nav{gap:5px;padding:12px 16px;margin-bottom:0}
+  nav button{padding:8px 12px;font-size:11px}
+  .gallery{grid-template-columns:repeat(auto-fill,minmax(115px,1fr));gap:11px}
+  .gallery img{height:115px}
+  .card{padding:20px;margin-bottom:14px;border-radius:20px}
+  #musicPlayer{width:250px;bottom:16px;right:16px;border-radius:18px}
+  #playerHeader{padding:11px;font-size:12px}
+  #playerContent{padding:12px;gap:9px}
+  .playBtn{padding:10px;font-size:11px}
+  #musicPlayer select{font-size:10px;padding:7px}
+  .map-frame-supreme iframe{height:380px}
+  .map-tab-btn{padding:11px 18px;font-size:11px}
+  .court-info-premium{padding:18px}
+  .court-name-premium{font-size:20px}
+  .map-title-section h2{font-size:24px}
+}
+
+@media(max-width:640px){
+  header{padding:18px}
+  header img{width:72px}
+  .hero h1{font-size:36px;letter-spacing:1px}
+  .hero p{font-size:13px}
+  .map-frame-supreme iframe{height:300px}
+  .map-tabs-container{gap:10px}
+  .map-tab-btn{padding:10px 16px;font-size:10px}
+}
+
+@media(max-width:480px){
+  .container{padding:16px 12px}
+  .hero h1{font-size:32px;letter-spacing:0.8px}
+  .hero p{font-size:12px;margin-top:6px}
+  header{padding:16px}
+  header img{width:65px;border-radius:14px}
+  nav{gap:4px;padding:10px 12px}
+  nav button{padding:7px 11px;font-size:10px;border-radius:12px}
+  .gallery{grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:9px}
+  .gallery img{height:100px;border-radius:12px}
+  .card{padding:16px;margin-bottom:12px;border-radius:18px}
+  #musicPlayer{width:220px;bottom:12px;right:12px;border-radius:16px}
+  #playerHeader{font-size:11px;padding:10px}
+  #playerContent{padding:11px;gap:8px}
+  .playBtn{padding:9px;font-size:10px}
+  .map-frame-supreme iframe{height:280px}
+  .map-tab-btn{padding:10px 14px;font-size:9px}
+  .court-info-premium{padding:14px}
+  .court-name-premium{font-size:16px}
+  .detail-row-premium{padding:10px}
+  .detail-icon-premium{font-size:16px}
+  .detail-text-value-premium{font-size:12px}
+  .action-btn-premium{font-size:10px;padding:10px}
+  .court-actions-premium{gap:8px}
+  .empty-state-premium{padding:50px 24px}
+  .empty-icon-premium{font-size:48px}
+  .empty-title-premium{font-size:18px}
+  .map-title-section h2{font-size:20px}
+}
+
+@media(max-width:380px){
+  .container{padding:12px}
+  .hero h1{font-size:28px}
+  header{padding:14px}
+  header img{width:58px}
+  nav{gap:4px;padding:8px}
+  nav button{padding:6px 10px;font-size:9px}
+  .gallery{grid-template-columns:repeat(2,1fr);gap:8px}
+  .gallery img{height:90px}
+  .card{padding:14px;margin-bottom:10px}
+  #musicPlayer{width:190px;bottom:10px;right:10px}
+  #playerHeader{font-size:10px;padding:8px}
+  .map-frame-supreme iframe{height:250px}
+  .map-tabs-container{gap:6px}
+  .map-tab-btn{padding:8px 10px;font-size:8px}
+  .court-info-premium{padding:12px}
+  .court-name-premium{font-size:14px;gap:6px}
+  .court-actions-premium{grid-template-columns:1fr}
+  .map-title-section h2{font-size:18px}
+  .empty-state-premium{padding:40px 20px}
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- CANVAS PARTÍCULAS -->
+<canvas id="particleCanvas"></canvas>
+
+<!-- LOADING SUPREMO -->
+<div id="loading">
+  <div class="loader-premium">
+    <div class="loader-ring"></div>
+    <div class="loader-ring"></div>
+    <div class="loader-ring"></div>
+  </div>
+  <div class="loading-content">
+    <p>BSX</p>
+    <div class="loading-sub">Liga de Rachas em Xanxerê</div>
+    <div class="progress-line"></div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header style="display: flex; justify-content: center; align-items: center; width: 100%;">
+  <img src="bannerh1.gif" alt="Banner BSX"
+       style="width: 100%; max-width: 100%; height: auto;">
+</header>
+
+<!-- NAV -->
+<nav>
+  <button onclick="showSection('home')">Início</button>
+  <button onclick="showSection('times')">Times</button>
+  <button onclick="showSection('campeonatos')">Campeonatos</button>
+  <button onclick="showSection('galeria')">Galeria</button>
+  <button onclick="showSection('redes')">Redes</button>
+  <button onclick="showSection('ranking')">Ranking</button>
+  <button onclick="showSection('mapa')">Mapa</button>
+  <button onclick="showSection('chat')">Chat</button>
+</nav>
+
+<div class="container">
+
+<!-- HOME -->
+<div id="home" class="section active">
+
+  <div class="hero" style="
+    padding:40px 32px;
+    border-radius:28px;
+    background:linear-gradient(135deg, rgba(27,27,27,0.8), rgba(10,10,10,0.95));
+    box-shadow:
+      0 25px 60px rgba(0,0,0,0.5),
+      inset 0 1px 0 rgba(255,255,255,0.06);
+    position:relative;
+    overflow:hidden;
+    border:1.5px solid rgba(255,122,0,0.15);
+  ">
+
+    <div style="
+      position:absolute;
+      top:-140px;
+      left:50%;
+      transform:translateX(-50%);
+      width:350px;
+      height:350px;
+      background:radial-gradient(circle, rgba(255,140,0,0.3), transparent 65%);
+      filter:blur(28px);
+      animation:heroGlowPremium 5s ease-in-out infinite;
+    "></div>
+
+    <div style="
+      position:absolute;
+      inset:0;
+      background:linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent);
+      opacity:0.5;
+      pointer-events:none;
+      border-radius:28px;
+    "></div>
+
+    <div style="
+      display:inline-flex;
+      align-items:center;
+      gap:9px;
+      padding:9px 18px;
+      border-radius:999px;
+      background:rgba(255,140,0,0.12);
+      border:1.5px solid rgba(255,140,0,0.35);
+      color:var(--primary);
+      font-size:11px;
+      font-weight:900;
+      letter-spacing:1.2px;
+      margin-bottom:20px;
+      animation:badgePremium 2.5s ease-in-out infinite;
+      position:relative;
+      z-index:1;
+      text-transform:uppercase;
+    ">
+      <span style="
+        width:8px;
+        height:8px;
+        border-radius:50%;
+        background:var(--primary);
+        box-shadow:0 0 12px var(--primary);
+        animation:pulseLight 2s ease-in-out infinite;
+      "></span>
+      Bem vindo à Liga
+    </div>
+
+    <h1 style="
+      margin:0 0 12px 0;
+      font-size:64px;
+      font-weight:950;
+      color:#fff;
+      letter-spacing:2px;
+      position:relative;
+      z-index:1;
+      text-shadow:0 8px 30px rgba(0,0,0,0.5);
+    ">
+      LIGA BSX
+    </h1>
+
+    <p style="
+      margin:0;
+      color:#c0c0c0;
+      font-size:16px;
+      letter-spacing:0.8px;
+      position:relative;
+      z-index:1;
+      font-weight:500;
+    ">
+      Liga de Rachas em Xanxerê 🏀
+    </p>
+
+    <div style="
+      margin-top:24px;
+      display:flex;
+      justify-content:center;
+      gap:12px;
+      flex-wrap:wrap;
+      position:relative;
+      z-index:1;
+    ">
+      <div style="
+        padding:8px 16px;
+        border-radius:14px;
+        background:rgba(255,255,255,0.05);
+        border:1px solid rgba(255,122,0,0.2);
+        font-size:12px;
+        color:#d0d0d0;
+        font-weight:600;
+        transition:.3s;
+        letter-spacing:0.3px;
+      ">
+        🏆 Ranking
+      </div>
+      <div style="
+        padding:8px 16px;
+        border-radius:14px;
+        background:rgba(255,255,255,0.05);
+        border:1px solid rgba(255,122,0,0.2);
+        font-size:12px;
+        color:#d0d0d0;
+        font-weight:600;
+        transition:.3s;
+        letter-spacing:0.3px;
+      ">
+        🏀 Rachas
+      </div>
+      <div style="
+        padding:8px 16px;
+        border-radius:14px;
+        background:rgba(255,140,0,0.12);
+        border:1.2px solid rgba(255,140,0,0.35);
+        font-size:12px;
+        color:var(--primary);
+        font-weight:800;
+        transition:.3s;
+        letter-spacing:0.3px;
+      ">
+        🔥 Comunidade Ativa
+      </div>
+    </div>
+
+    <div style="
+      margin-top:24px;
+      width:70px;
+      height:2.5px;
+      background:linear-gradient(90deg, transparent, var(--primary), transparent);
+      margin-left:auto;
+      margin-right:auto;
+      opacity:0.8;
+      position:relative;
+      z-index:1;
+      border-radius:999px;
+    "></div>
+
+    <style>
+      @keyframes heroGlowPremium{
+        0%, 100%{opacity:0.7;transform:scale(1)}
+        50%{opacity:1;transform:scale(1.15)}
+      }
+      @keyframes badgePremium{
+        0%, 100%{box-shadow:0 0 0 0 rgba(255,140,0,0.4)}
+        50%{box-shadow:0 0 0 12px rgba(255,140,0,0)}
+      }
+      @keyframes pulseLight{
+        0%, 100%{opacity:1;transform:scale(1)}
+        50%{opacity:0.5;transform:scale(1.3)}
+      }
+    </style>
+
+  </div>
+
+  <div class="card" style="
+    margin-top:20px;
+    background:linear-gradient(135deg, rgba(27,27,27,0.7), rgba(12,12,12,0.9));
+    border-left:7px solid var(--primary);
+  ">
+    <div style="
+      font-size:14px;
+      color:#d8d8d8;
+      line-height:2;
+      letter-spacing:0.4px;
+      font-weight:500;
+    ">
+      Criada em 2025, a BSX nasceu com o objetivo de fortalecer e divulgar a cultura do basquete em Xanxerê e região.
+      A iniciativa organiza rachas em quadras públicas e também em espaços reservados, promovendo competitividade,
+      união entre atletas e a evolução do jogo de rua.
+    </div>
+  </div>
+  
+  <div class="card" style="
+  margin-top:20px;
+  background:linear-gradient(135deg, rgba(27,27,27,0.7), rgba(12,12,12,0.9));
+  border-left:7px solid var(--primary);
+">
+  <div style="
+    font-size:16px;
+    color:#ffffff;
+    line-height:1.8;
+    letter-spacing:0.5px;
+    font-weight:600;
+    font-style:italic;
+  ">
+    “Ainda que eu ande pelo vale da sombra da morte, não temerei mal algum, porque Tu estás comigo.”
+  </div>
+
+  <div style="
+    margin-top:10px;
+    font-size:13px;
+    color:#b0b0b0;
+    letter-spacing:1px;
+  ">
+    — Salmos 23:4
+  </div>
+</div>
+
+</div>
+
+<!-- TIMES -->
+<div id="times" class="section">
+  <div class="card">
+
+    <div class="team" style="
+      display:flex;
+      align-items:center;
+      gap:22px;
+      padding:28px;
+      border-radius:24px;
+      background:linear-gradient(135deg, rgba(27,27,27,0.8), rgba(10,10,10,0.95));
+      box-shadow:
+        0 20px 50px rgba(0,0,0,0.4),
+        inset 0 1px 0 rgba(255,255,255,0.05);
+      position:relative;
+      overflow:hidden;
+      border:1.5px solid rgba(255,122,0,0.12);
+    ">
+
+      <div style="
+        position:absolute;
+        top:-80px;
+        right:-80px;
+        width:220px;
+        height:220px;
+        background:radial-gradient(circle, rgba(255,140,0,0.25), transparent 65%);
+        filter:blur(18px);
+        animation:teamGlowPremium 6s ease-in-out infinite;
+      "></div>
+
+      <div style="
+        position:absolute;
+        left:0;
+        top:0;
+        bottom:0;
+        width:7px;
+        background:linear-gradient(180deg, var(--primary), var(--primary2), var(--primary));
+        box-shadow:0 0 22px rgba(255,122,0,0.35);
+      "></div>
+
+      <div style="
+        width:85px;
+        height:85px;
+        border-radius:20px;
+        background:rgba(255,255,255,0.05);
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        box-shadow:
+          inset 0 0 0 1px rgba(255,255,255,0.08),
+          0 14px 35px rgba(0,0,0,0.5);
+        transition:.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        position:relative;
+        z-index:1;
+        border:1.5px solid rgba(255,122,0,0.12);
+      ">
+        <img src="logo.png" alt="Time BSX" style="width:65px;height:65px;object-fit:contain;">
+      </div>
+
+      <div style="flex:1;position:relative;z-index:1;">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:12px;flex-wrap:wrap;">
+          <div style="font-size:20px;font-weight:920;color:#fff;letter-spacing:0.8px;">
+            🏀 Time BSX
+          </div>
+          <div style="
+            display:flex;
+            align-items:center;
+            gap:7px;
+            font-size:11px;
+            font-weight:900;
+            padding:7px 14px;
+            border-radius:999px;
+            color:var(--primary);
+            background:rgba(255,140,0,0.12);
+            border:1.2px solid rgba(255,140,0,0.35);
+            white-space:nowrap;
+            animation:statusPremium 2.5s ease-in-out infinite;
+            letter-spacing:0.6px;
+          ">
+            <span style="
+              width:7px;
+              height:7px;
+              border-radius:50%;
+              background:var(--primary);
+              box-shadow:0 0 10px var(--primary);
+            "></span>
+            ATIVO
+          </div>
+        </div>
+        <div style="font-size:14px;color:#e0e0e0;letter-spacing:0.4px;margin-bottom:8px;font-weight:600;line-height:1.6;">
+          Borges • Daniel • Eduardo • Victor
+        </div>
+        <div style="font-size:12px;color:#8a8a8a;margin-bottom:12px;letter-spacing:0.3px;">
+          • Elenco principal
+        </div>
+        <div style="display:flex;gap:11px;flex-wrap:wrap;">
+          <div style="
+            padding:8px 14px;
+            border-radius:11px;
+            background:rgba(255,255,255,0.04);
+            border:1.2px solid rgba(255,122,0,0.18);
+            font-size:12px;
+            color:#e0e0e0;
+            font-weight:600;
+            letter-spacing:0.3px;
+          ">
+            👥 4 jogadores
+          </div>
+          <div style="
+            padding:8px 14px;
+            border-radius:11px;
+            background:rgba(255,255,255,0.04);
+            border:1.2px solid rgba(255,122,0,0.18);
+            font-size:12px;
+            color:#e0e0e0;
+            font-weight:600;
+            letter-spacing:0.3px;
+          ">
+            🏀 3x3 competitivo
+          </div>
+          <div style="
+            padding:8px 14px;
+            border-radius:11px;
+            background:rgba(255,140,0,0.1);
+            border:1.2px solid rgba(255,140,0,0.3);
+            font-size:12px;
+            color:var(--primary);
+            font-weight:800;
+            letter-spacing:0.3px;
+          ">
+            🔥 em destaque
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <style>
+      @keyframes teamGlowPremium{
+        0%, 100%{opacity:0.5}
+        50%{opacity:0.9}
+      }
+      @keyframes statusPremium{
+        0%, 100%{box-shadow:0 0 0 0 rgba(255,140,0,0.4)}
+        50%{box-shadow:0 0 0 8px rgba(255,140,0,0)}
+      }
+    </style>
+
+  </div>
+</div>
+
+<!-- CAMPEONATOS -->
+<div id="campeonatos" class="section">
+  <div class="card">
+    <h2 style="
+      text-align:center;
+      color:var(--primary);
+      margin-bottom:24px;
+      letter-spacing:1px;
+      font-size:24px;
+      font-weight:850;
+    ">
+      🏆 Campeonatos
+    </h2>
+    <div class="card" style="
+      background:linear-gradient(135deg, rgba(27,27,27,0.8), rgba(17,17,17,0.9));
+      border-left:7px solid var(--primary);
+    ">
+      <div style="display:flex;align-items:flex-start;gap:18px;">
+        <img src="bsl.png" alt="BSL Logo" style="
+          width:72px;
+          height:72px;
+          border-radius:16px;
+          background:#fff;
+          padding:8px;
+          object-fit:contain;
+          box-shadow:0 10px 28px rgba(0,0,0,0.35);
+          flex-shrink:0;
+          transition:.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+          border:1.5px solid rgba(255,122,0,0.15);
+        ">
+        <div style="display:flex;flex-direction:column;gap:8px;flex:1;width:100%;">
+          <span style="
+            background:rgba(255,165,0,0.13);
+            color:var(--primary);
+            padding:7px 14px;
+            font-size:11px;
+            border-radius:999px;
+            font-weight:850;
+            letter-spacing:0.9px;
+            border:1px solid rgba(255,165,0,0.4);
+            display:flex;
+            align-items:center;
+            gap:7px;
+            width:fit-content;
+            animation:statusGlowPremium 2.2s ease-in-out infinite;
+          ">
+            <span style="
+              width:7px;
+              height:7px;
+              background:var(--primary);
+              border-radius:50%;
+              display:inline-block;
+              box-shadow:0 0 10px var(--primary);
+            "></span>
+            EM ANDAMENTO
+          </span>
+          <strong style="
+            font-size:19px;
+            color:#fff;
+            letter-spacing:0.5px;
+            font-weight:850;
+            line-height:1.3;
+          ">
+            BSL 3x3 Caçador
+          </strong>
+          <span style="
+            color:#b8b8b8;
+            font-size:13px;
+            line-height:1.5;
+          ">
+            Competição de basquete 3x3
+          </span>
+          <div style="
+            margin-top:8px;
+            display:flex;
+            align-items:center;
+            gap:10px;
+            color:var(--primary);
+            font-weight:750;
+            font-size:13px;
+            flex-wrap:wrap;
+          ">
+            📅 26 Abril 2026
+            <span style="color:#555;">•</span>
+            <span style="color:#aaa;font-weight:500;">Local: SC - Caçador</span>
+          </div>
+        </div>
+      </div>
+      <style>
+        @keyframes statusGlowPremium{
+          0%, 100%{box-shadow:inset 0 0 0 1px rgba(255,140,0,0.3)}
+          50%{box-shadow:inset 0 0 12px rgba(255,140,0,0.25), 0 0 12px rgba(255,140,0,0.25)}
+        }
+      </style>
+    </div>
+  </div>
+</div>
+
+<!-- GALERIA -->
+<div id="galeria" class="section">
+  <div class="card">
+    <div class="gallery" id="gallery"></div>
+  </div>
+</div>
+
+<!-- REDES -->
+<div id="redes" class="section">
+  <div class="card">
+    <div style="
+      padding:28px;
+      border-radius:24px;
+      background:linear-gradient(135deg, rgba(27,27,27,0.8), rgba(11,11,11,0.95));
+      box-shadow:0 20px 50px rgba(0,0,0,0.5);
+      border:1.5px solid rgba(255,122,0,0.12);
+      position:relative;
+      overflow:hidden;
+    ">
+      <div style="
+        position:absolute;
+        top:-80px;
+        right:-80px;
+        width:200px;
+        height:200px;
+        background:radial-gradient(circle, rgba(255,140,0,0.22), transparent 65%);
+        filter:blur(18px);
+        animation:redesGlowPremium 6s ease-in-out infinite;
+      "></div>
+      <div style="
+        font-size:20px;
+        font-weight:920;
+        color:#fff;
+        margin-bottom:16px;
+        letter-spacing:0.8px;
+        position:relative;
+        z-index:1;
+      ">
+        🌐 Redes Oficiais
+      </div>
+      <div style="
+        font-size:13px;
+        color:#9d9d9d;
+        margin-bottom:20px;
+        line-height:1.6;
+        position:relative;
+        z-index:1;
+        letter-spacing:0.4px;
+      ">
+        Acesse os canais oficiais da Liga BSX para novidades, jogos e contato direto.
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px;position:relative;z-index:1;">
+        <div onclick="openInsta()" style="
+          display:flex;
+          align-items:center;
+          justify-content:space-between;
+          padding:15px 16px;
+          border-radius:16px;
+          background:rgba(255,255,255,0.04);
+          border:1.5px solid rgba(255,122,0,0.16);
+          cursor:pointer;
+          transition:.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+          box-shadow:0 6px 20px rgba(0,0,0,0.25);
+        ">
+          <div style="display:flex;align-items:center;gap:12px;flex:1;">
+            <div style="
+              width:40px;
+              height:40px;
+              border-radius:12px;
+              background:radial-gradient(circle at 30% 30%, #ffcc70, #c13584, #5851db);
+              box-shadow:0 8px 18px rgba(0,0,0,0.3);
+              flex-shrink:0;
+            "></div>
+            <div style="flex:1;">
+              <div style="color:#fff;font-weight:800;font-size:14px;letter-spacing:0.5px;">
+                Instagram
+              </div>
+              <div style="color:#8d8d8d;font-size:12px;letter-spacing:0.3px;margin-top:2px;">
+                Veja fotos e atualizações
+              </div>
+            </div>
+          </div>
+          <div style="color:#888;font-size:20px;font-weight:500;">›</div>
+        </div>
+        <div onclick="openZap()" style="
+          display:flex;
+          align-items:center;
+          justify-content:space-between;
+          padding:15px 16px;
+          border-radius:16px;
+          background:rgba(255,255,255,0.04);
+          border:1.5px solid rgba(255,122,0,0.16);
+          cursor:pointer;
+          transition:.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+          box-shadow:0 6px 20px rgba(0,0,0,0.25);
+        ">
+          <div style="display:flex;align-items:center;gap:12px;flex:1;">
+            <div style="
+              width:40px;
+              height:40px;
+              border-radius:12px;
+              background:#25D366;
+              box-shadow:0 8px 18px rgba(0,0,0,0.3);
+              flex-shrink:0;
+            "></div>
+            <div style="flex:1;">
+              <div style="color:#fff;font-weight:800;font-size:14px;letter-spacing:0.5px;">
+                WhatsApp
+              </div>
+              <div style="color:#8d8d8d;font-size:12px;letter-spacing:0.3px;margin-top:2px;">
+                Faça parte do nosso grupo de rachas
+              </div>
+            </div>
+          </div>
+          <div style="color:#888;font-size:20px;font-weight:500;">›</div>
+        </div>
+      </div>
+      <style>
+        @keyframes redesGlowPremium{
+          0%, 100%{opacity:0.4}
+          50%{opacity:0.8}
+        }
+      </style>
+    </div>
+  </div>
+</div>
+
+<!-- RANKING -->
+<div id="ranking" class="section">
+  <div class="card">
+    <h2 style="
+      margin-bottom:22px;
+      color:var(--primary);
+      text-align:center;
+      letter-spacing:1px;
+      font-size:24px;
+      font-weight:850;
+    ">
+      🏆 Ranking de Times
+    </h2>
+    <div class="card" style="
+      border-left:7px solid gold;
+      background:linear-gradient(135deg, rgba(255,215,0,0.08), rgba(255,215,0,0.03));
+    ">
+      <div class="team" style="align-items:center;display:flex;gap:14px;">
+        <img src="logo.png" width="60" alt="BSX Logo" style="
+          transition:.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+          filter:drop-shadow(0 0 18px rgba(255,215,0,0.25));
+          border-radius:12px;
+        ">
+        <div>
+          <strong style="font-size:19px;font-weight:850;letter-spacing:0.5px;">🥇 1º Lugar - BSX</strong><br>
+          <span style="color:#8a8a8a;font-size:12px;letter-spacing:0.3px;">Time oficial da liga</span>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="border-left:7px solid silver;opacity:0.92;background:linear-gradient(135deg, rgba(192,192,192,0.05), rgba(192,192,192,0.02));">
+      <strong style="font-size:17px;font-weight:800;">🥈 2º Lugar</strong><br>
+      <span style="color:#8a8a8a;font-size:12px;letter-spacing:0.3px;">Vaga disponível para time</span>
+    </div>
+    <div class="card" style="border-left:7px solid #cd7f32;opacity:0.88;background:linear-gradient(135deg, rgba(205,127,50,0.05), rgba(205,127,50,0.02));">
+      <strong style="font-size:17px;font-weight:800;">🥉 3º Lugar</strong><br>
+      <span style="color:#8a8a8a;font-size:12px;letter-spacing:0.3px;">Vaga disponível para time</span>
+    </div>
+    <div class="card" style="opacity:0.82;background:linear-gradient(135deg, rgba(100,100,100,0.05), rgba(100,100,100,0.02));">
+      <strong style="font-size:17px;font-weight:800;">4º Lugar</strong><br>
+      <span style="color:#8a8a8a;font-size:12px;letter-spacing:0.3px;">Vaga disponível para time</span>
+    </div>
+  </div>
+</div>
+
+<!-- MAPA -->
+<div id="mapa" class="section">
+  <div class="card">
+    <div class="map-title-section">
+      <h2>Quadras Disponíveis</h2>
+      <p>Encontre e reserve sua quadra de basquete em Santa Catarina</p>
+    </div>
+    
+    <div class="map-tabs-container">
+      <button class="map-tab-btn active" onclick="switchMapTab('public', event)">📍 Quadras Públicas</button>
+      <button class="map-tab-btn" onclick="switchMapTab('reserved', event)">🔒 Quadras Reservadas</button>
+    </div>
+
+    <!-- QUADRAS PÚBLICAS -->
+    <div id="public" class="map-content active-map">
+      <div class="court-item-wrapper">
+        <div class="court-info-premium">
+          <div class="court-header-premium">
+            <div class="court-name-premium">🏀 EcoPark Xanxerê</div>
+            <div class="court-status-badge-premium public">
+              <span></span>
+              Pública
+            </div>
+          </div>
+
+          <div class="court-details-premium">
+            <div class="detail-row-premium">
+              <div class="detail-icon-premium">📍</div>
+              <div class="detail-text-premium">
+                <div class="detail-text-label-premium">Localização</div>
+                <div class="detail-text-value-premium">Xanxerê, Santa Catarina</div>
+              </div>
+            </div>
+            <div class="detail-row-premium">
+              <div class="detail-icon-premium">🕐</div>
+              <div class="detail-text-premium">
+                <div class="detail-text-label-premium">Horário</div>
+                <div class="detail-text-value-premium">Segunda - Domingo • 06h-22h</div>
+              </div>
+            </div>
+            <div class="detail-row-premium">
+              <div class="detail-icon-premium">💰</div>
+              <div class="detail-text-premium">
+                <div class="detail-text-label-premium">Valor</div>
+                <div class="detail-text-value-premium">Gratuito para acesso</div>
+              </div>
+            </div>
+            <div class="detail-row-premium">
+              <div class="detail-icon-premium">⭐</div>
+              <div class="detail-text-premium">
+                <div class="detail-text-label-premium">Infraestrutura</div>
+                <div class="detail-text-value-premium">Quadra Polisportiva</div>
+              </div>
+            </div>
+            <div class="detail-row-premium">
+              <div class="detail-icon-premium">✅</div>
+              <div class="detail-text-premium">
+                <div class="detail-text-label-premium">Nota</div>
+                <div class="detail-text-value-premium">6/10</div>
+              </div>
+            </div>
+            <div class="detail-row-premium">
+              <div class="detail-icon-premium">👥</div>
+              <div class="detail-text-premium">
+                <div class="detail-text-label-premium">Tipo</div>
+                <div class="detail-text-value-premium">Espaço público</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="court-actions-premium">
+            <button class="action-btn-premium" onclick="window.open('https://maps.google.com/?q=EcoPark+Xanxerê', '_blank')">📍 No Mapa</button>
+            <button class="action-btn-premium" onclick="openContato()">💬 Contato</button>
+          </div>
+        </div>
+
+        <div class="map-frame-supreme">
+          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3605.8832853854355!2d-52.41170872346799!3d-26.897200170644506!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94d48663e4c9c9cf%3A0x8c8c8c8c8c8c8c8d!2sEcoPark%20Xanxerê!5e0!3m2!1spt-BR!2sbr!4v1713139200000" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUADRAS RESERVADAS -->
+    <div id="reserved" class="map-content">
+      <div class="empty-state-premium">
+        <div class="empty-icon-premium">🔒</div>
+        <div class="empty-title-premium">Quadras Reservadas</div>
+        <div class="empty-text-premium">
+          As quadras reservadas serão adicionadas em breve!<br>
+          Entre em contato conosco para contratar um espaço exclusivo para sua equipe.
+        </div>
+        <button class="empty-btn-premium" onclick="openContato()">📞 Fale Conosco</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- CHAT -->
+<div id="chat" class="section">
+  <div class="card">
+
+    <div style="text-align:center; margin-bottom:28px;">
+      <h2 style="
+        font-size:32px;
+        font-weight:950;
+        background:linear-gradient(90deg, var(--primary), #fff);
+        -webkit-background-clip:text;
+        -webkit-text-fill-color:transparent;
+        letter-spacing:1.2px;
+        margin-bottom:10px;
+      ">
+       Chat da Comunidade
+      </h2>
+
+      <p style="
+        color:#8a8a8a;
+        font-size:13px;
+        letter-spacing:0.6px;
+      ">
+        Converse com a galera da Liga em tempo real
+      </p>
+    </div>
+
+    <div style="
+        position:relative;
+        border-radius:22px;
+        overflow:hidden;
+        border:2px solid rgba(255,122,0,0.25);
+        background:linear-gradient(135deg, rgba(15,15,15,0.9), rgba(8,8,8,0.95));
+        box-shadow:
+        0 25px 70px rgba(0,0,0,0.5),
+        inset 0 1px 0 rgba(255,122,0,0.1);
+      ">
+
+      <div style="
+        position:absolute;
+        inset:0;
+        background:linear-gradient(135deg, rgba(255,122,0,0.12), transparent);
+        opacity:0.6;
+        pointer-events:none;
+      "></div>
+
+      <iframe 
+        src="https://www3.cbox.ws/box/?boxid=3554357&boxtag=T09A19"
+        width="100%" 
+        height="550"
+        frameborder="0"
+        scrolling="auto"
+        style="
+          display:block;
+          border:none;
+          border-radius:20px;
+          position:relative;
+          z-index:1;
+          background:#000;
+        ">
+      </iframe>
+
+    </div>
+
+  </div>
+</div>
+
+</div>
+
+<!-- MODAL -->
+<div id="modal" onclick="closeModal()">
+  <img id="modalImg">
+</div>
+
+<!-- MUSIC PLAYER -->
+<div id="musicPlayer" class="minimized">
+  <div id="playerHeader" onclick="togglePlayer()">
+    🎧 Player
+    <span id="toggleIcon">X</span>
+  </div>
+  <div id="playerContent">
+    <audio id="audio"></audio>
+    <button onclick="toggleMusic()" class="playBtn">
+      ▶ Play / Pause
+    </button>
+    <select onchange="changeMusic(this.value)">
+      <option value="musica1.mp3">🎵 Música 1</option>
+      <option value="musica2.mp3">🎵 Música 2</option>
+      <option value="musica3.mp3">🎵 Música 3</option>
+      <option value="musica4.mp3">🎵 Música 4</option>
+      <option value="musica5.mp3">🎵 Música 5</option>
+      <option value="musica6.mp3">🎵 Música 6</option>
+      <option value="musica7.mp3">🎵 Música 7</option>
+      <option value="musica8.mp3">🎵 Música 8</option>
+      <option value="musica9.mp3">🎵 Música 9</option>
+      <option value="musica10.mp3">🎵 Música 10</option>
+    </select>
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById('particleCanvas');
+const ctx = canvas.getContext('2d');
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+class Particle {
+  constructor() {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
+    this.size = Math.random() * 2.5 + 0.5;
+    this.speedX = (Math.random() - 0.5) * 0.8;
+    this.speedY = (Math.random() - 0.5) * 0.8;
+    this.opacity = Math.random() * 0.4 + 0.1;
+  }
+
+  update() {
+    this.x += this.speedX;
+    this.y += this.speedY;
+    if (this.x > canvas.width) this.x = 0;
+    if (this.x < 0) this.x = canvas.width;
+    if (this.y > canvas.height) this.y = 0;
+    if (this.y < 0) this.y = canvas.height;
+  }
+
+  draw() {
+    ctx.fillStyle = `rgba(255,122,0,${this.opacity})`;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
+const particles = [];
+for (let i = 0; i < 45; i++) {
+  particles.push(new Particle());
+}
+
+function animateParticles() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particles.forEach(p => {
+    p.update();
+    p.draw();
+  });
+  requestAnimationFrame(animateParticles);
+}
+
+animateParticles();
+
+window.addEventListener('resize', () => {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+});
+
+const audio = document.getElementById('audio');
+window.onload = () => {
+  setTimeout(() => {
+    document.getElementById('loading').style.display = 'none';
+  }, 2400);
+  audio.src = 'musica1.mp3';
+};
+
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function addImage(src) {
+  const img = document.createElement('img');
+  img.src = src;
+  img.onclick = () => {
+    document.getElementById('modal').style.display = 'flex';
+    document.getElementById('modalImg').src = src;
+  };
+  document.getElementById('gallery').appendChild(img);
+}
+
+addImage('logo.png');
+addImage('logo2.png');
+addImage('bsl.png');
+
+function closeModal() {
+  document.getElementById('modal').style.display = 'none';
+}
+
+function toggleMusic() {
+  if (audio.paused) audio.play();
+  else audio.pause();
+}
+
+function togglePlayer() {
+  const player = document.getElementById('musicPlayer');
+  player.classList.toggle('minimized');
+}
+
+function changeMusic(src) {
+  audio.src = src;
+  audio.play();
+}
+
+function switchMapTab(tab, event) {
+  document.querySelectorAll('.map-content').forEach(el => {
+    el.classList.remove('active-map');
+  });
+  document.querySelectorAll('.map-tab-btn').forEach(el => {
+    el.classList.remove('active');
+  });
+  
+  document.getElementById(tab).classList.add('active-map');
+  event.target.classList.add('active');
+}
+
+function openInsta() {
+  window.open('https://instagram.com/conta.bsx/', '_blank');
+}
+
+function openZap() {
+  window.open('https://chat.whatsapp.com/ItE2VtOWXLeDyo9k7w4knw', '_blank');
+}
+
+function openContato() {
+  window.open('https://wa.me/5549989018917', '_blank');
+}
+
+function ativarAntiInspecionar() {
+
+  document.addEventListener('dragstart', function (e) {
+    e.preventDefault();
+  });
+
+  document.addEventListener('mousedown', function (e) {
+    if (e.button === 1 || e.detail > 1) {
+      e.preventDefault();
+    }
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'F12' || e.keyCode === 123) {
+      e.preventDefault();
+    }
+    if (
+      (e.ctrlKey && e.shiftKey && ['I', 'C', 'J', 'K'].includes(e.key.toUpperCase())) ||
+      (e.metaKey && e.altKey && e.key.toUpperCase() === 'I') ||
+      (e.ctrlKey && ['U', 'S', 'P'].includes(e.key.toUpperCase()))
+    ) {
+      e.preventDefault();
+    }
+  });
+
+  function detectaDevTools() {
+    if (
+      window.outerWidth - window.innerWidth > 200 ||
+      window.outerHeight - window.innerHeight > 200
+    ) {
+      document.body.innerHTML = '<h2 style="text-align:center;margin-top:20%;">Acesso bloqueado</h2>';
+    }
+  }
+
+  window.addEventListener('resize', detectaDevTools);
+  setInterval(detectaDevTools, 1000);
+
+  window.addEventListener('blur', function () {
+    setTimeout(() => detectaDevTools(), 200);
+  });
+}
+
+ativarAntiInspecionar();
+
+</script>
+
+<script>
+  const banners = [
+    "banner1.gif",
+    "banner2.gif",
+    "banner3.gif",
+    "banner4.gif",
+    "banner5.gif",
+    "banner6.gif",
+    "banner7.gif",
+    "banner8.gif",
+  ];
+
+  function trocarBanner() {
+    const randomBanner = banners[Math.floor(Math.random() * banners.length)];
+    const hero = document.querySelector(".hero");
+    if (!hero) return;
+
+    hero.style.background = `
+      linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)),
+      url('${randomBanner}')
+    `;
+
+    hero.style.backgroundSize = "cover";
+    hero.style.backgroundPosition = "center";
+    hero.style.backgroundRepeat = "no-repeat";
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    trocarBanner();
+  });
+</script>
+
+</body>
+</html>
