@@ -2308,23 +2308,9 @@ function openContato() {
 }
 
 function ativarAntiInspecionar() {
-  document.addEventListener('contextmenu', function (e) {
-    e.preventDefault();
-    alert('Ação não permitida!');
-  });
-
-  document.addEventListener('selectstart', function (e) {
-    e.preventDefault();
-  });
 
   document.addEventListener('dragstart', function (e) {
     e.preventDefault();
-  });
-
-  ['copy', 'paste', 'cut'].forEach(function (evt) {
-    document.addEventListener(evt, function (e) {
-      e.preventDefault();
-    });
   });
 
   document.addEventListener('mousedown', function (e) {
@@ -2354,6 +2340,7 @@ function ativarAntiInspecionar() {
       document.body.innerHTML = '<h2 style="text-align:center;margin-top:20%;">Acesso bloqueado</h2>';
     }
   }
+
   window.addEventListener('resize', detectaDevTools);
   setInterval(detectaDevTools, 1000);
 
